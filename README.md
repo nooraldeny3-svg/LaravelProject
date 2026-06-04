@@ -47,8 +47,8 @@ php artisan serve
 
 | Role  | Email | Password |
 |-------|-------|----------|
-| Admin | admin@turkeytours.com | password |
-| User  | user@turkeytours.com | password |
+| Admin | admin@admin.com | password |
+| User  | user@example.com | password |
 
 ## License
 
