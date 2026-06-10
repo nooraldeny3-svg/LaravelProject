@@ -1,52 +1,47 @@
 <x-guest-layout>
+<div class="auth-wrap">
+  <div class="auth-card">
+    <div class="auth-logo">
+      <a href="{{ route('home') }}">Tech<span>Shop</span></a>
+    </div>
+    <div class="auth-ttl">
+      <h2>Create Account</h2>
+      <p>Join TechShop for exclusive deals and fast checkout</p>
+    </div>
+
     <form method="POST" action="{{ route('register') }}">
-        @csrf
+      @csrf
 
-        <!-- Name -->
-        <div>
-            <x-input-label for="name" :value="__('Name')" />
-            <x-text-input id="name" class="block mt-1 w-full" type="text" name="name" :value="old('name')" required autofocus autocomplete="name" />
-            <x-input-error :messages="$errors->get('name')" class="mt-2" />
-        </div>
+      <div class="fg">
+        <label class="fl" for="name">Full Name <span>*</span></label>
+        <input type="text" id="name" name="name" class="fi" value="{{ old('name') }}" required autofocus autocomplete="name" placeholder="John Smith">
+        @error('name')<div class="fe">{{ $message }}</div>@enderror
+      </div>
 
-        <!-- Email Address -->
-        <div class="mt-4">
-            <x-input-label for="email" :value="__('Email')" />
-            <x-text-input id="email" class="block mt-1 w-full" type="email" name="email" :value="old('email')" required autocomplete="username" />
-            <x-input-error :messages="$errors->get('email')" class="mt-2" />
-        </div>
+      <div class="fg">
+        <label class="fl" for="email">Email Address <span>*</span></label>
+        <input type="email" id="email" name="email" class="fi" value="{{ old('email') }}" required autocomplete="email" placeholder="you@example.com">
+        @error('email')<div class="fe">{{ $message }}</div>@enderror
+      </div>
 
-        <!-- Password -->
-        <div class="mt-4">
-            <x-input-label for="password" :value="__('Password')" />
+      <div class="fg">
+        <label class="fl" for="password">Password <span>*</span></label>
+        <input type="password" id="password" name="password" class="fi" required autocomplete="new-password" placeholder="Min. 8 characters">
+        @error('password')<div class="fe">{{ $message }}</div>@enderror
+      </div>
 
-            <x-text-input id="password" class="block mt-1 w-full"
-                            type="password"
-                            name="password"
-                            required autocomplete="new-password" />
+      <div class="fg" style="margin-bottom:22px">
+        <label class="fl" for="password_confirmation">Confirm Password <span>*</span></label>
+        <input type="password" id="password_confirmation" name="password_confirmation" class="fi" required autocomplete="new-password" placeholder="Repeat password">
+        @error('password_confirmation')<div class="fe">{{ $message }}</div>@enderror
+      </div>
 
-            <x-input-error :messages="$errors->get('password')" class="mt-2" />
-        </div>
-
-        <!-- Confirm Password -->
-        <div class="mt-4">
-            <x-input-label for="password_confirmation" :value="__('Confirm Password')" />
-
-            <x-text-input id="password_confirmation" class="block mt-1 w-full"
-                            type="password"
-                            name="password_confirmation" required autocomplete="new-password" />
-
-            <x-input-error :messages="$errors->get('password_confirmation')" class="mt-2" />
-        </div>
-
-        <div class="flex items-center justify-end mt-4">
-            <a class="underline text-sm text-gray-600 hover:text-gray-900 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500" href="{{ route('login') }}">
-                {{ __('Already registered?') }}
-            </a>
-
-            <x-primary-button class="ms-4">
-                {{ __('Register') }}
-            </x-primary-button>
-        </div>
+      <button type="submit" class="btn btn-p btn-fw btn-lg">Create Account</button>
     </form>
+
+    <div class="auth-foot">
+      Already have an account? <a href="{{ route('login') }}">Sign in</a>
+    </div>
+  </div>
+</div>
 </x-guest-layout>

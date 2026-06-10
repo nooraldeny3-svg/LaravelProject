@@ -6,50 +6,61 @@ use App\Models\Category;
 use App\Models\Product;
 use Illuminate\Http\Request;
 
-// Handles all public-facing pages: home, tours list, tour detail, cities list
 class HomeController extends Controller
 {
-    // Home page — show a welcome banner + 6 featured tours
     public function index()
     {
-        $featuredTours = Product::where('is_available', true)
-                                ->with('category')
-                                ->latest()
-                                ->take(6)
-                                ->get();
+        $featuredProducts = Product::where('is_available', true)
+                                   ->with('category')
+                                   ->latest()
+                                   ->take(8)
+                                   ->get();
 
-        return view('home', compact('featuredTours'));
+        $categories = Category::withCount('products')->take(5)->get();
+
+        return view('home', compact('featuredProducts', 'categories'));
     }
 
-    // Tours page — show all available tours, with optional city filter
-    public function tours(Request $request)
+    public function products(Request $request)
     {
         $categories = Category::all();
 
         $query = Product::where('is_available', true)->with('category');
 
-        // If the user picked a city from the dropdown, filter by that city
         if ($request->filled('category')) {
             $query->where('category_id', $request->category);
         }
 
-        $tours = $query->get();
+        if ($request->filled('search')) {
+            $s = $request->search;
+            $query->where(function ($q) use ($s) {
+                $q->where('title', 'like', "%{$s}%")
+                  ->orWhere('brand', 'like', "%{$s}%")
+                  ->orWhere('description', 'like', "%{$s}%");
+            });
+        }
 
-        return view('tours.index', compact('tours', 'categories'));
+        $products = $query->get();
+
+        return view('products.index', compact('products', 'categories'));
     }
 
-    // Single tour detail page
-    public function tourDetail(Product $product)
+    public function productDetail(Product $product)
     {
         $product->load('category');
-        return view('tours.show', compact('product'));
+
+        $related = Product::where('category_id', $product->category_id)
+                          ->where('id', '!=', $product->id)
+                          ->where('is_available', true)
+                          ->take(4)
+                          ->get();
+
+        return view('products.show', compact('product', 'related'));
     }
 
-    // Cities page — show all cities with their tour count
-    public function cities()
+    public function categories()
     {
-        // withCount adds a products_count attribute to each category
         $categories = Category::withCount('products')->get();
-        return view('cities.index', compact('categories'));
+        return view('categories.index', compact('categories'));
     }
 }

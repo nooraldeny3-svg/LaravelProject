@@ -1,24 +1,28 @@
-# TurkeyTours — Turkish Tourism Booking Web Application
+# TechShop — Electronics E-Commerce Web Application
 
-A web-based e-commerce platform for booking tours across Turkey's most popular destinations, built with Laravel.
+A full-featured e-commerce platform for browsing and purchasing electronics, built with Laravel.
 
 ## About the Project
 
-TurkeyTours allows users to browse and book tour packages across Turkish cities including Istanbul, Cappadocia, Antalya, and Pamukkale. The application includes a full admin panel for managing tours, cities, and orders.
+TechShop allows users to browse products across categories like Smartphones, Laptops, Audio, Gaming, and Smart Devices. It includes a shopping cart, checkout flow, order tracking, and a complete admin panel.
 
 ## Features
 
-- Browse tour packages by city
-- Shopping cart and checkout system
-- User registration and login
-- My Bookings page for order history
-- Admin dashboard with order, tour, and city management
+- Browse products by category with search and filtering
+- Product detail pages with related product suggestions
+- Session-based shopping cart
+- Checkout with shipping address and delivery date
+- Order confirmation and order history for users
+- Admin dashboard with full CRUD for products, categories, and orders
+- Order status management (pending / confirmed / cancelled)
+- Dark mode toggle (persisted across sessions)
 - Role-based access control (admin / regular user)
+- Responsive design — works on mobile, tablet, and desktop
 
 ## Tech Stack
 
 - **Backend:** PHP 8.5, Laravel 13
-- **Frontend:** HTML, CSS, JavaScript (no CSS frameworks)
+- **Frontend:** HTML, CSS, JavaScript (no external CSS frameworks)
 - **Database:** MySQL
 - **Authentication:** Laravel Breeze
 
@@ -29,17 +33,17 @@ TurkeyTours allows users to browse and book tour packages across Turkish cities 
 git clone https://github.com/nooraldeny3-svg/LaravelProject.git
 cd LaravelProject
 
-# Install dependencies
+# Install PHP dependencies
 composer install
 
-# Copy environment file and configure your database
+# Set up environment
 cp .env.example .env
 php artisan key:generate
 
-# Run migrations and seeders
-php artisan migrate --seed
+# Configure your database in .env, then run:
+php artisan migrate:fresh --seed
 
-# Start the server
+# Start the development server
 php artisan serve
 ```
 
@@ -49,6 +53,14 @@ php artisan serve
 |-------|-------|----------|
 | Admin | admin@admin.com | password |
 | User  | user@example.com | password |
+
+## Project Structure
+
+- `app/Models/` — User, Product, Category, Order, OrderItem
+- `app/Http/Controllers/` — Public + Admin controllers
+- `resources/views/` — Blade templates (layouts, products, cart, checkout, admin)
+- `database/seeders/` — 5 categories, 16 products, 2 demo users
+- `routes/web.php` — Public, cart, auth-protected, and admin route groups
 
 ## License
 

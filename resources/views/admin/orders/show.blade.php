@@ -1,199 +1,142 @@
 @extends('layouts.app')
-@section('title', 'Order #' . $order->id . ' — Admin')
-
-@section('styles')
-<style>
-    .order-layout {
-        display: grid;
-        grid-template-columns: 1fr 300px;
-        gap: 1.4rem;
-        padding-top: 2.5rem;
-        padding-bottom: 3rem;
-    }
-    .detail-grid-2 {
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        gap: 1rem;
-        padding: 1.4rem;
-    }
-    .d-label { font-size: 0.68rem; font-weight: 600; letter-spacing: 1px; text-transform: uppercase; color: var(--gray); margin-bottom: 0.18rem; }
-    .d-val   { font-weight: 600; color: var(--navy); font-size: 0.88rem; }
-    .status-card {
-        background: white;
-        border-radius: 8px;
-        border: 1px solid var(--border);
-        box-shadow: 0 2px 8px rgba(0,0,0,0.05);
-        overflow: hidden;
-        position: sticky;
-        top: 80px;
-    }
-    .status-card-head {
-        background: var(--navy);
-        padding: 1.1rem 1.4rem;
-        color: white;
-    }
-    .status-card-body { padding: 1.4rem; }
-    .status-select {
-        width: 100%;
-        padding: 0.65rem 0.88rem;
-        font-size: 0.88rem;
-        color: var(--navy);
-        border: 1.5px solid var(--border);
-        border-radius: 6px;
-        background: white;
-        outline: none;
-        cursor: pointer;
-        transition: border-color 0.2s;
-        font-family: inherit;
-        margin-bottom: 1.1rem;
-    }
-    .status-select:focus { border-color: var(--red); }
-    .status-guide { background: #f8fafc; border-radius: 6px; padding: 1rem; margin-top: 1.2rem; }
-    .sg-row { display: flex; align-items: center; gap: 0.5rem; font-size: 0.77rem; color: var(--gray); margin-bottom: 0.4rem; }
-    .sg-row:last-child { margin-bottom: 0; }
-    @media (max-width: 860px) {
-        .order-layout { grid-template-columns: 1fr; }
-        .status-card { position: static; }
-    }
-    @media (max-width: 560px) {
-        .detail-grid-2 { grid-template-columns: 1fr; }
-    }
-</style>
-@endsection
+@section('title', 'Order #' . str_pad($order->id, 6, '0', STR_PAD_LEFT) . ' — Admin')
 
 @section('content')
 
-<div class="page-header">
-    <div class="container">
-        <div class="section-label" style="color:var(--gold);">Admin Panel</div>
-        <h1 class="section-title" style="color:white;">Order #{{ str_pad($order->id, 6, '0', STR_PAD_LEFT) }}</h1>
+<div class="adm-layout">
+  <aside class="adm-side">
+    <div class="adm-nav-lbl">Overview</div>
+    <a href="{{ route('admin.home') }}" class="adm-nav-item">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+      Dashboard
+    </a>
+    <div class="adm-nav-lbl">Catalog</div>
+    <a href="{{ route('admin.products.index') }}" class="adm-nav-item">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"/></svg>
+      Products
+    </a>
+    <a href="{{ route('admin.categories.index') }}" class="adm-nav-item">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 19a2 2 0 01-2 2H4a2 2 0 01-2-2V5a2 2 0 012-2h5l2 3h9a2 2 0 012 2z"/></svg>
+      Categories
+    </a>
+    <div class="adm-nav-lbl">Sales</div>
+    <a href="{{ route('admin.orders.index') }}" class="adm-nav-item on">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/></svg>
+      Orders
+    </a>
+    <hr class="divider">
+    <a href="{{ route('home') }}" class="adm-nav-item">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/></svg>
+      Back to Store
+    </a>
+  </aside>
+
+  <div class="adm-content">
+
+    <a href="{{ route('admin.orders.index') }}" class="pg-back" style="display:inline-flex;margin-bottom:20px">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"/></svg>
+      All Orders
+    </a>
+
+    <div class="flex-bet flex-wrap gap-3" style="margin-bottom:28px">
+      <div>
+        <h1 style="font-size:1.75rem">Order #{{ str_pad($order->id, 6, '0', STR_PAD_LEFT) }}</h1>
+        <p style="margin-top:4px">Placed on {{ $order->created_at->format('d F Y, H:i') }}</p>
+      </div>
+      @if($order->status === 'confirmed') <span class="badge badge-conf" style="font-size:.9rem;padding:8px 16px">Confirmed</span>
+      @elseif($order->status === 'cancelled') <span class="badge badge-canc" style="font-size:.9rem;padding:8px 16px">Cancelled</span>
+      @else <span class="badge badge-pend" style="font-size:.9rem;padding:8px 16px">Pending</span>
+      @endif
     </div>
-</div>
 
-<div class="container">
-    <div style="padding-top:1.5rem;margin-bottom:0.8rem;">
-        <a href="{{ route('admin.orders.index') }}" style="font-size:0.83rem;color:var(--gray);font-weight:500;">&larr; All Orders</a>
-    </div>
+    <div style="display:grid;grid-template-columns:1fr 340px;gap:24px;align-items:start">
 
-    <div class="order-layout">
+      {{-- Left: details --}}
+      <div style="display:flex;flex-direction:column;gap:20px">
 
-        <div>
-            <!-- Customer Details -->
-            <div class="admin-card" style="margin-bottom:1.2rem;">
-                <div class="admin-card-header">
-                    <h6>Customer Details</h6>
-                    @if($order->status === 'confirmed')
-                        <span class="badge badge-confirmed">Confirmed</span>
-                    @elseif($order->status === 'cancelled')
-                        <span class="badge badge-cancelled">Cancelled</span>
-                    @else
-                        <span class="badge badge-pending">Pending</span>
-                    @endif
-                </div>
-                <div class="detail-grid-2">
-                    <div>
-                        <div class="d-label">Customer Name</div>
-                        <div class="d-val">{{ $order->customer_name }}</div>
-                    </div>
-                    <div>
-                        <div class="d-label">Email</div>
-                        <div class="d-val">{{ $order->user->email }}</div>
-                    </div>
-                    <div>
-                        <div class="d-label">Phone</div>
-                        <div class="d-val">{{ $order->customer_phone }}</div>
-                    </div>
-                    <div>
-                        <div class="d-label">Travel Date</div>
-                        <div class="d-val">{{ \Carbon\Carbon::parse($order->travel_date)->format('d F Y') }}</div>
-                    </div>
-                    <div>
-                        <div class="d-label">Booking Date</div>
-                        <div class="d-val">{{ $order->created_at->format('d F Y, H:i') }}</div>
-                    </div>
-                    <div>
-                        <div class="d-label">Total</div>
-                        <div style="font-family:'Playfair Display',serif;font-size:1.5rem;font-weight:800;color:var(--red);">
-                            ${{ number_format($order->total_price, 2) }}
-                        </div>
-                    </div>
-                </div>
+        {{-- Customer Info --}}
+        <div style="background:var(--sf);border:1px solid var(--bd);border-radius:var(--r4);padding:24px">
+          <h4 style="margin-bottom:18px">Customer Information</h4>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px">
+            @foreach([
+              ['label'=>'Name','value'=>$order->customer_name],
+              ['label'=>'Email','value'=>$order->user->email ?? '—'],
+              ['label'=>'Phone','value'=>$order->customer_phone],
+              ['label'=>'Order Date','value'=>$order->created_at->format('d M Y')],
+            ] as $r)
+              <div>
+                <div style="font-size:.72rem;font-weight:700;color:var(--tx3);text-transform:uppercase;letter-spacing:.06em;margin-bottom:3px">{{ $r['label'] }}</div>
+                <div style="font-weight:600">{{ $r['value'] }}</div>
+              </div>
+            @endforeach
+          </div>
+          @if($order->shipping_address)
+            <div style="margin-top:14px;padding-top:14px;border-top:1px solid var(--bd)">
+              <div style="font-size:.72rem;font-weight:700;color:var(--tx3);text-transform:uppercase;letter-spacing:.06em;margin-bottom:5px">Shipping Address</div>
+              <div style="font-weight:500">{{ $order->shipping_address }}</div>
             </div>
-
-            <!-- Tours Booked -->
-            <div class="admin-card">
-                <div class="admin-card-header">
-                    <h6>Tours Booked</h6>
-                </div>
-                <div class="table-wrap">
-                    <table class="admin-table">
-                        <thead>
-                            <tr>
-                                <th>Tour</th>
-                                <th>City</th>
-                                <th>Price (at booking)</th>
-                                <th>Travelers</th>
-                                <th>Subtotal</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @foreach($order->orderItems as $item)
-                            <tr>
-                                <td style="font-weight:600;color:var(--navy);">{{ $item->product->title }}</td>
-                                <td>
-                                    <span style="background:rgba(192,57,43,0.08);color:var(--red);font-size:0.73rem;font-weight:600;padding:0.2rem 0.65rem;border-radius:50px;">
-                                        {{ $item->product->category->name ?? '—' }}
-                                    </span>
-                                </td>
-                                <td>${{ number_format($item->price, 2) }}</td>
-                                <td>{{ $item->quantity }}</td>
-                                <td style="font-weight:700;color:var(--red);font-family:'Playfair Display',serif;">${{ number_format($item->price * $item->quantity, 2) }}</td>
-                            </tr>
-                            @endforeach
-                        </tbody>
-                        <tfoot>
-                            <tr style="background:#f8fafc;">
-                                <td colspan="4" style="padding:0.95rem 1.1rem;font-weight:700;text-align:right;">Grand Total</td>
-                                <td style="font-family:'Playfair Display',serif;font-size:1.3rem;font-weight:800;color:var(--red);padding:0.95rem 1.1rem;">
-                                    ${{ number_format($order->total_price, 2) }}
-                                </td>
-                            </tr>
-                        </tfoot>
-                    </table>
-                </div>
+          @endif
+          @if($order->delivery_date)
+            <div style="margin-top:14px;padding-top:14px;border-top:1px solid var(--bd)">
+              <div style="font-size:.72rem;font-weight:700;color:var(--tx3);text-transform:uppercase;letter-spacing:.06em;margin-bottom:5px">Preferred Delivery Date</div>
+              <div style="font-weight:600;color:var(--p)">{{ \Carbon\Carbon::parse($order->delivery_date)->format('d F Y') }}</div>
             </div>
+          @endif
         </div>
 
-        <!-- Status Update -->
-        <div>
-            <div class="status-card">
-                <div class="status-card-head">
-                    <div style="font-family:'Playfair Display',serif;font-weight:600;font-size:0.97rem;">Update Status</div>
-                    <div style="font-size:0.76rem;opacity:0.58;margin-top:0.15rem;">Change booking status</div>
+        {{-- Order Items --}}
+        <div style="background:var(--sf);border:1px solid var(--bd);border-radius:var(--r4);overflow:hidden">
+          <div style="padding:18px 22px;border-bottom:1px solid var(--bd)"><h4>Order Items</h4></div>
+          @foreach($order->orderItems as $item)
+            <div style="display:flex;align-items:center;gap:14px;padding:16px 22px;border-bottom:1px solid var(--bd)">
+              @if($item->product->image)
+                <img src="{{ $item->product->image }}" alt="{{ $item->product->title }}" style="width:56px;height:56px;border-radius:var(--r2);object-fit:cover;border:1px solid var(--bd)">
+              @else
+                <div style="width:56px;height:56px;border-radius:var(--r2);background:var(--sf2);display:flex;align-items:center;justify-content:center;color:var(--tx3);border:1px solid var(--bd)">
+                  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="3" width="20" height="14" rx="2"/></svg>
                 </div>
-                <div class="status-card-body">
-                    <form method="POST" action="{{ route('admin.orders.updateStatus', $order->id) }}">
-                        @csrf
-                        @method('PATCH')
-                        <label style="display:block;font-size:0.7rem;font-weight:600;letter-spacing:0.8px;text-transform:uppercase;color:var(--gray);margin-bottom:0.4rem;">New Status</label>
-                        <select name="status" class="status-select">
-                            <option value="pending"   {{ $order->status === 'pending'   ? 'selected' : '' }}>Pending</option>
-                            <option value="confirmed" {{ $order->status === 'confirmed' ? 'selected' : '' }}>Confirmed</option>
-                            <option value="cancelled" {{ $order->status === 'cancelled' ? 'selected' : '' }}>Cancelled</option>
-                        </select>
-                        <button type="submit" class="btn btn-primary btn-block">Update Status</button>
-                    </form>
-
-                    <div class="status-guide">
-                        <p style="font-size:0.73rem;font-weight:600;color:var(--navy);margin-bottom:0.6rem;">Status Guide</p>
-                        <div class="sg-row"><span class="badge badge-pending">Pending</span> Awaiting review</div>
-                        <div class="sg-row"><span class="badge badge-confirmed">Confirmed</span> Payment received</div>
-                        <div class="sg-row"><span class="badge badge-cancelled">Cancelled</span> Booking cancelled</div>
-                    </div>
-                </div>
+              @endif
+              <div style="flex:1">
+                <div style="font-weight:600">{{ $item->product->title }}</div>
+                <div style="font-size:.84rem;color:var(--tx3);margin-top:2px">{{ $item->quantity }} &times; ${{ number_format($item->price, 2) }}</div>
+              </div>
+              <div style="font-weight:700;color:var(--p)">${{ number_format($item->price * $item->quantity, 2) }}</div>
             </div>
+          @endforeach
+          <div style="padding:16px 22px;display:flex;justify-content:space-between;align-items:center">
+            <span style="font-weight:700">Total</span>
+            <span style="font-size:1.4rem;font-weight:900;color:var(--p)">${{ number_format($order->total_price, 2) }}</span>
+          </div>
         </div>
+      </div>
+
+      {{-- Right: status --}}
+      <div>
+        <div style="background:var(--sf);border:1px solid var(--bd);border-radius:var(--r4);padding:24px;position:sticky;top:calc(var(--nav-h) + 18px)">
+          <h4 style="margin-bottom:18px">Update Status</h4>
+          <form method="POST" action="{{ route('admin.orders.updateStatus', $order->id) }}">
+            @csrf @method('PATCH')
+            <div class="fg">
+              <label class="fl">Order Status</label>
+              <select name="status" class="fs">
+                <option value="pending"   {{ $order->status === 'pending'   ? 'selected' : '' }}>Pending</option>
+                <option value="confirmed" {{ $order->status === 'confirmed' ? 'selected' : '' }}>Confirmed</option>
+                <option value="cancelled" {{ $order->status === 'cancelled' ? 'selected' : '' }}>Cancelled</option>
+              </select>
+            </div>
+            <button type="submit" class="btn btn-p btn-fw">Update Status</button>
+          </form>
+
+          <hr class="divider">
+          <div style="font-size:.84rem;color:var(--tx3);display:flex;flex-direction:column;gap:8px">
+            <div class="flex-bet"><span>Items</span><strong style="color:var(--tx)">{{ $order->orderItems->count() }}</strong></div>
+            <div class="flex-bet"><span>Order Total</span><strong style="color:var(--p)">${{ number_format($order->total_price, 2) }}</strong></div>
+          </div>
+        </div>
+      </div>
 
     </div>
+  </div>
 </div>
+
 @endsection

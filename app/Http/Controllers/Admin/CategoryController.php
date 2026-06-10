@@ -6,7 +6,6 @@ use App\Http\Controllers\Controller;
 use App\Models\Category;
 use Illuminate\Http\Request;
 
-// Full CRUD for cities/categories in the admin panel.
 class CategoryController extends Controller
 {
     public function index()
@@ -31,7 +30,7 @@ class CategoryController extends Controller
         Category::create($request->only(['name', 'description', 'image']));
 
         return redirect()->route('admin.categories.index')
-                         ->with('success', 'City created successfully!');
+                         ->with('success', 'Category created successfully!');
     }
 
     public function edit(Category $category)
@@ -50,13 +49,13 @@ class CategoryController extends Controller
         $category->update($request->only(['name', 'description', 'image']));
 
         return redirect()->route('admin.categories.index')
-                         ->with('success', 'City updated successfully!');
+                         ->with('success', 'Category updated successfully!');
     }
 
     public function destroy(Category $category)
     {
         $category->delete();
         return redirect()->route('admin.categories.index')
-                         ->with('success', 'City deleted successfully!');
+                         ->with('success', 'Category deleted.');
     }
 }

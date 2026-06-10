@@ -1,78 +1,96 @@
 @extends('layouts.app')
-@section('title', 'Edit City — Admin')
-
-@section('styles')
-<style>
-    .form-wrap { max-width: 620px; margin: 0 auto; padding: 2.5rem 0 3rem; }
-    .form-actions { display: flex; gap: 0.8rem; margin-top: 2rem; }
-    .errors-box { background: #fee2e2; border-left: 4px solid var(--red); border-radius: 6px; padding: 0.9rem 1.1rem; margin-bottom: 1.4rem; }
-    .errors-box ul { padding-left: 1.2rem; font-size: 0.83rem; color: #b91c1c; }
-</style>
-@endsection
+@section('title', 'Edit Category — Admin')
 
 @section('content')
 
-<div class="page-header">
-    <div class="container">
-        <div class="section-label" style="color:var(--gold);">Admin Panel</div>
-        <h1 class="section-title" style="color:white;">Edit: {{ $category->name }}</h1>
-    </div>
-</div>
+<div class="adm-layout">
+  <aside class="adm-side">
+    <div class="adm-nav-lbl">Overview</div>
+    <a href="{{ route('admin.home') }}" class="adm-nav-item">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+      Dashboard
+    </a>
+    <div class="adm-nav-lbl">Catalog</div>
+    <a href="{{ route('admin.products.index') }}" class="adm-nav-item">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"/></svg>
+      Products
+    </a>
+    <a href="{{ route('admin.categories.index') }}" class="adm-nav-item on">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 19a2 2 0 01-2 2H4a2 2 0 01-2-2V5a2 2 0 012-2h5l2 3h9a2 2 0 012 2z"/></svg>
+      Categories
+    </a>
+    <div class="adm-nav-lbl">Sales</div>
+    <a href="{{ route('admin.orders.index') }}" class="adm-nav-item">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/></svg>
+      Orders
+    </a>
+    <hr class="divider">
+    <a href="{{ route('home') }}" class="adm-nav-item">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/></svg>
+      Back to Store
+    </a>
+  </aside>
 
-<div class="container">
-    <div class="form-wrap">
-        <div style="margin-bottom:1rem;">
-            <a href="{{ route('admin.categories.index') }}" style="font-size:0.83rem;color:var(--gray);font-weight:500;">&larr; All Cities</a>
+  <div class="adm-content">
+    <a href="{{ route('admin.categories.index') }}" class="pg-back" style="display:inline-flex;margin-bottom:20px">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"/></svg>
+      Categories
+    </a>
+    <h1 style="font-size:1.75rem;margin-bottom:4px">Edit Category</h1>
+    <p style="margin-bottom:28px;color:var(--tx3)">{{ $category->name }}</p>
+
+    @if($errors->any())
+      <div style="background:var(--err-bg);border:1px solid rgba(239,68,68,.25);border-radius:var(--r3);padding:14px 18px;margin-bottom:22px">
+        <ul style="padding-left:18px;font-size:.84rem;color:var(--err)">
+          @foreach($errors->all() as $e)<li>{{ $e }}</li>@endforeach
+        </ul>
+      </div>
+    @endif
+
+    <div style="max-width:600px;background:var(--sf);border:1px solid var(--bd);border-radius:var(--r4);padding:32px">
+      <form method="POST" action="{{ route('admin.categories.update', $category->id) }}">
+        @csrf @method('PUT')
+
+        <div class="fg">
+          <label class="fl" for="name">Category Name <span>*</span></label>
+          <input type="text" id="name" name="name" class="fi" value="{{ old('name', $category->name) }}" required>
+          @error('name')<div class="fe">{{ $message }}</div>@enderror
         </div>
 
-        <div class="form-card">
-            <div class="form-card-header">Edit City Information</div>
-            <div class="form-card-body">
-
-                @if($errors->any())
-                    <div class="errors-box">
-                        <ul>@foreach($errors->all() as $e)<li>{{ $e }}</li>@endforeach</ul>
-                    </div>
-                @endif
-
-                <form method="POST" action="{{ route('admin.categories.update', $category->id) }}">
-                    @csrf
-                    @method('PUT')
-
-                    <div class="form-group">
-                        <label class="form-label">City Name <span style="color:var(--red);">*</span></label>
-                        <input type="text" name="name" class="form-input @error('name') is-invalid @enderror"
-                               value="{{ old('name', $category->name) }}" required>
-                        @error('name')<div class="form-error">{{ $message }}</div>@enderror
-                    </div>
-
-                    <div class="form-group">
-                        <label class="form-label">Description</label>
-                        <textarea name="description" rows="3" class="form-input @error('description') is-invalid @enderror">{{ old('description', $category->description) }}</textarea>
-                        @error('description')<div class="form-error">{{ $message }}</div>@enderror
-                    </div>
-
-                    <div class="form-group" style="margin-bottom:2rem;">
-                        <label class="form-label">Image URL <span style="color:var(--gray);text-transform:none;letter-spacing:0;font-size:0.72rem;">(optional)</span></label>
-                        <input type="url" name="image" class="form-input @error('image') is-invalid @enderror"
-                               value="{{ old('image', $category->image) }}">
-                        @error('image')<div class="form-error">{{ $message }}</div>@enderror
-                        @if($category->image)
-                            <div style="margin-top:0.7rem;display:flex;align-items:center;gap:0.7rem;">
-                                <img src="{{ $category->image }}" style="height:56px;border-radius:5px;object-fit:cover;" alt="{{ $category->name }}">
-                                <span style="font-size:0.76rem;color:var(--gray);">Current image</span>
-                            </div>
-                        @endif
-                    </div>
-
-                    <div class="form-actions">
-                        <button type="submit" class="btn btn-primary">Update City</button>
-                        <a href="{{ route('admin.categories.index') }}" class="btn btn-light">Cancel</a>
-                    </div>
-                </form>
-
-            </div>
+        <div class="fg">
+          <label class="fl" for="description">Description</label>
+          <textarea id="description" name="description" class="ft" rows="3">{{ old('description', $category->description) }}</textarea>
+          @error('description')<div class="fe">{{ $message }}</div>@enderror
         </div>
+
+        <div class="fg">
+          <label class="fl" for="image">Image URL</label>
+          <input type="url" id="image" name="image" class="fi" value="{{ old('image', $category->image) }}">
+          @error('image')<div class="fe">{{ $message }}</div>@enderror
+        </div>
+
+        <div id="imgPreviewWrap" style="{{ $category->image ? '' : 'display:none;' }}margin-bottom:18px">
+          <img id="imgPreview" src="{{ $category->image }}" alt="Preview" style="max-height:140px;border-radius:var(--r3);border:1px solid var(--bd);object-fit:cover">
+        </div>
+
+        <div style="display:flex;gap:10px;flex-wrap:wrap">
+          <button type="submit" class="btn btn-p">Save Changes</button>
+          <a href="{{ route('admin.categories.index') }}" class="btn btn-o">Cancel</a>
+          <form method="POST" action="{{ route('admin.categories.destroy', $category->id) }}" onsubmit="return confirm('Delete this category?')" style="margin-left:auto">
+            @csrf @method('DELETE')
+            <button type="submit" class="btn btn-d">Delete</button>
+          </form>
+        </div>
+      </form>
     </div>
+  </div>
 </div>
+
+@endsection
+
+@section('scripts')
+<script>
+var imgInput=document.getElementById('image'),imgWrap=document.getElementById('imgPreviewWrap'),imgPrev=document.getElementById('imgPreview');
+imgInput.addEventListener('input',function(){var v=this.value.trim();if(v){imgPrev.src=v;imgWrap.style.display='block'}else{imgWrap.style.display='none'}});
+</script>
 @endsection

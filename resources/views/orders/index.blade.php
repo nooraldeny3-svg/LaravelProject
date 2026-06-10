@@ -1,138 +1,97 @@
 @extends('layouts.app')
-@section('title', 'My Bookings — TurkeyTours')
-
-@section('styles')
-<style>
-    .bookings-list {
-        display: flex;
-        flex-direction: column;
-        gap: 1rem;
-    }
-    .booking-card {
-        background: white;
-        border-radius: 8px;
-        border: 1px solid var(--border);
-        box-shadow: 0 2px 8px rgba(0,0,0,0.05);
-        overflow: hidden;
-        transition: box-shadow 0.2s;
-    }
-    .booking-card:hover { box-shadow: 0 5px 18px rgba(0,0,0,0.09); }
-    .booking-head {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        padding: 1.1rem 1.4rem;
-        border-bottom: 1px solid #f1f5f9;
-    }
-    .booking-ref {
-        font-family: 'Playfair Display', serif;
-        font-size: 0.97rem;
-        font-weight: 700;
-        color: var(--navy);
-    }
-    .booking-body {
-        display: grid;
-        grid-template-columns: repeat(4, 1fr);
-        gap: 1rem;
-        padding: 1.2rem 1.4rem;
-    }
-    .booking-meta .b-label {
-        font-size: 0.67rem;
-        font-weight: 600;
-        letter-spacing: 1px;
-        text-transform: uppercase;
-        color: var(--gray);
-        margin-bottom: 0.18rem;
-    }
-    .booking-meta .b-val { font-weight: 600; color: var(--navy); font-size: 0.88rem; }
-    .booking-total {
-        font-family: 'Playfair Display', serif;
-        font-size: 1.45rem;
-        font-weight: 800;
-        color: var(--red);
-    }
-    .info-note {
-        background: #f8fafc;
-        border: 1px solid var(--border);
-        border-radius: 6px;
-        padding: 0.8rem 1rem;
-        font-size: 0.8rem;
-        color: var(--gray);
-        margin-top: 1.2rem;
-    }
-    .empty-box { text-align: center; padding: 5rem 0; }
-    .empty-icon { font-size: 2.5rem; color: var(--gray); margin-bottom: 1.1rem; }
-    @media (max-width: 700px) {
-        .booking-body { grid-template-columns: 1fr 1fr; }
-    }
-    @media (max-width: 420px) {
-        .booking-body { grid-template-columns: 1fr; }
-    }
-</style>
-@endsection
+@section('title', 'My Orders — TechShop')
 
 @section('content')
 
-<div class="page-header">
-    <div class="container">
-        <div class="section-label" style="color:var(--gold);">Your Journey History</div>
-        <h1 class="section-title" style="color:white;">My Bookings</h1>
+<div class="pg-head">
+  <div class="container">
+    <div class="pg-head-inner">
+      <h1>My Orders</h1>
+      <p class="pg-sub">Track and manage your purchases</p>
     </div>
+  </div>
 </div>
 
-<div class="container" style="padding-top:3rem;padding-bottom:3rem;">
+<div class="container" style="padding-bottom:80px">
 
-    <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:0.8rem;margin-bottom:1.8rem;">
-        <p class="text-muted" style="font-size:0.88rem;">{{ $orders->count() }} booking(s) found</p>
-        <a href="{{ route('tours') }}" class="btn btn-primary btn-sm">+ New Booking</a>
+  <div class="flex-bet flex-wrap gap-3" style="margin-bottom:24px">
+    <p class="text-muted">{{ $orders->count() }} order(s) found</p>
+    <a href="{{ route('products') }}" class="btn btn-p btn-sm">+ Shop More</a>
+  </div>
+
+  @if($orders->isEmpty())
+    <div class="empty">
+      <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+      <h3>No orders yet</h3>
+      <p>When you place an order, it will appear here.</p>
+      <a href="{{ route('products') }}" class="btn btn-p">Start Shopping</a>
     </div>
+  @else
+    <div style="display:flex;flex-direction:column;gap:14px">
+      @foreach($orders as $order)
+        <div style="background:var(--sf);border:1px solid var(--bd);border-radius:var(--r4);overflow:hidden;transition:box-shadow var(--t2);box-shadow:var(--s1)" onmouseenter="this.style.boxShadow='var(--s3)'" onmouseleave="this.style.boxShadow='var(--s1)'">
 
-    @if($orders->isEmpty())
-        <div class="empty-box">
-            <div class="empty-icon">&#128218;</div>
-            <h3 style="font-family:'Playfair Display',serif;margin-bottom:0.5rem;">No bookings yet</h3>
-            <p class="text-muted" style="margin-bottom:1.3rem;">Start exploring Turkey's most amazing destinations.</p>
-            <a href="{{ route('tours') }}" class="btn btn-primary">Browse Tours</a>
-        </div>
-    @else
-        <div class="bookings-list">
-            @foreach($orders as $order)
-            <div class="booking-card">
-                <div class="booking-head">
-                    <div class="booking-ref">Booking #{{ str_pad($order->id, 6, '0', STR_PAD_LEFT) }}</div>
-                    @if($order->status === 'confirmed')
-                        <span class="badge badge-confirmed">&#10003; Confirmed</span>
-                    @elseif($order->status === 'cancelled')
-                        <span class="badge badge-cancelled">&#10005; Cancelled</span>
-                    @else
-                        <span class="badge badge-pending">&#8987; Pending</span>
-                    @endif
-                </div>
-                <div class="booking-body">
-                    <div class="booking-meta">
-                        <div class="b-label">Travel Date</div>
-                        <div class="b-val">{{ \Carbon\Carbon::parse($order->travel_date)->format('d M Y') }}</div>
-                    </div>
-                    <div class="booking-meta">
-                        <div class="b-label">Tours</div>
-                        <div class="b-val">{{ $order->orderItems->count() }} type(s)</div>
-                    </div>
-                    <div class="booking-meta">
-                        <div class="b-label">Booked On</div>
-                        <div class="b-val">{{ $order->created_at->format('d M Y') }}</div>
-                    </div>
-                    <div class="booking-meta">
-                        <div class="b-label">Total</div>
-                        <div class="booking-total">${{ number_format($order->total_price, 2) }}</div>
-                    </div>
-                </div>
+          {{-- Header --}}
+          <div style="display:flex;justify-content:space-between;align-items:center;padding:16px 22px;border-bottom:1px solid var(--bd);flex-wrap:wrap;gap:10px">
+            <div style="display:flex;align-items:center;gap:16px;flex-wrap:wrap">
+              <div>
+                <div style="font-size:.72rem;font-weight:700;color:var(--tx3);text-transform:uppercase;letter-spacing:.06em;margin-bottom:3px">Order</div>
+                <div style="font-weight:800;font-size:1rem">#{{ str_pad($order->id, 6, '0', STR_PAD_LEFT) }}</div>
+              </div>
+              <div>
+                <div style="font-size:.72rem;font-weight:700;color:var(--tx3);text-transform:uppercase;letter-spacing:.06em;margin-bottom:3px">Placed</div>
+                <div style="font-weight:600;font-size:.9rem">{{ $order->created_at->format('d M Y') }}</div>
+              </div>
+              <div>
+                <div style="font-size:.72rem;font-weight:700;color:var(--tx3);text-transform:uppercase;letter-spacing:.06em;margin-bottom:3px">Items</div>
+                <div style="font-weight:600;font-size:.9rem">{{ $order->orderItems->count() }} product(s)</div>
+              </div>
             </div>
-            @endforeach
-        </div>
+            <div style="display:flex;align-items:center;gap:14px">
+              <div style="font-size:1.4rem;font-weight:900;color:var(--p)">${{ number_format($order->total_price, 2) }}</div>
+              @if($order->status === 'confirmed')
+                <span class="badge badge-conf">Confirmed</span>
+              @elseif($order->status === 'cancelled')
+                <span class="badge badge-canc">Cancelled</span>
+              @else
+                <span class="badge badge-pend">Pending</span>
+              @endif
+            </div>
+          </div>
 
-        <div class="info-note">
-            Our team will confirm pending bookings within 24 hours and contact you by phone.
+          {{-- Body --}}
+          <div style="padding:14px 22px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px">
+            <div style="font-size:.875rem;color:var(--tx3)">
+              @if($order->delivery_date)
+                Preferred delivery: <strong style="color:var(--tx2)">{{ \Carbon\Carbon::parse($order->delivery_date)->format('d M Y') }}</strong>
+              @endif
+              @if($order->shipping_address)
+                &bull; Shipping to: <strong style="color:var(--tx2)">{{ Str::limit($order->shipping_address, 40) }}</strong>
+              @endif
+            </div>
+            @if($order->status === 'pending')
+              <div style="font-size:.8rem;color:var(--warn);display:flex;align-items:center;gap:5px">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                Awaiting confirmation
+              </div>
+            @elseif($order->status === 'confirmed')
+              <div style="font-size:.8rem;color:var(--ok);display:flex;align-items:center;gap:5px">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
+                Order confirmed &amp; processing
+              </div>
+            @endif
+          </div>
+
         </div>
-    @endif
+      @endforeach
+    </div>
+
+    <div style="background:var(--sf2);border:1px solid var(--bd);border-radius:var(--r3);padding:14px 18px;margin-top:20px;font-size:.875rem;color:var(--tx3);display:flex;align-items:center;gap:10px">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--p)" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+      Pending orders will be confirmed within 24 hours. We'll contact you by phone to arrange payment.
+    </div>
+  @endif
+
 </div>
+
 @endsection

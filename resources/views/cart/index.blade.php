@@ -1,287 +1,125 @@
 @extends('layouts.app')
-@section('title', 'Your Cart — TurkeyTours')
-
-@section('styles')
-<style>
-    .cart-layout {
-        display: grid;
-        grid-template-columns: 1fr 340px;
-        gap: 1.8rem;
-        padding: 3rem 0;
-    }
-    .cart-table-wrap {
-        background: white;
-        border-radius: 8px;
-        border: 1px solid var(--border);
-        box-shadow: 0 2px 8px rgba(0,0,0,0.05);
-        overflow: hidden;
-    }
-    .cart-table { width: 100%; border-collapse: collapse; }
-    .cart-table thead th {
-        background: var(--navy);
-        color: rgba(255,255,255,0.72);
-        font-size: 0.72rem;
-        font-weight: 600;
-        letter-spacing: 1.3px;
-        text-transform: uppercase;
-        padding: 0.9rem 1rem;
-        text-align: left;
-    }
-    .cart-table tbody td {
-        padding: 1.1rem 1rem;
-        border-bottom: 1px solid #f1f5f9;
-        vertical-align: middle;
-        font-size: 0.875rem;
-    }
-    .cart-table tbody tr:last-child td { border-bottom: none; }
-    .cart-table tbody tr:hover { background: #fafafa; }
-    .cart-item-img {
-        width: 68px; height: 52px;
-        border-radius: 5px;
-        object-fit: cover;
-    }
-    .cart-img-ph {
-        width: 68px; height: 52px;
-        border-radius: 5px;
-        background: linear-gradient(135deg, var(--navy), var(--navy-mid));
-    }
-    .cart-title {
-        font-family: 'Playfair Display', serif;
-        font-weight: 600;
-        font-size: 0.92rem;
-        color: var(--navy);
-    }
-    .qty-wrap { display: flex; align-items: center; gap: 0.4rem; }
-    .qty-input {
-        width: 65px;
-        border: 1.5px solid var(--border);
-        border-radius: 5px;
-        padding: 0.38rem 0.55rem;
-        font-size: 0.88rem;
-        font-weight: 600;
-        text-align: center;
-        color: var(--navy);
-        outline: none;
-        transition: border-color 0.2s;
-        font-family: inherit;
-    }
-    .qty-input:focus { border-color: var(--red); }
-    .btn-qty {
-        background: var(--navy);
-        color: white;
-        border: none;
-        border-radius: 5px;
-        width: 32px; height: 32px;
-        display: flex; align-items: center; justify-content: center;
-        font-size: 0.82rem;
-        cursor: pointer;
-        transition: background 0.2s;
-        font-family: inherit;
-    }
-    .btn-qty:hover { background: var(--red); }
-    .btn-remove {
-        background: #fee2e2;
-        color: #991b1b;
-        border: none;
-        border-radius: 5px;
-        width: 32px; height: 32px;
-        display: flex; align-items: center; justify-content: center;
-        cursor: pointer;
-        transition: background 0.2s, color 0.2s;
-        font-size: 0.85rem;
-        font-family: inherit;
-    }
-    .btn-remove:hover { background: #dc2626; color: white; }
-
-    .summary-card {
-        background: white;
-        border-radius: 8px;
-        border: 1px solid var(--border);
-        box-shadow: 0 2px 8px rgba(0,0,0,0.05);
-        overflow: hidden;
-        position: sticky;
-        top: 80px;
-    }
-    .summary-head {
-        background: var(--navy);
-        padding: 1.1rem 1.4rem;
-        color: white;
-        font-family: 'Playfair Display', serif;
-        font-weight: 600;
-        font-size: 0.97rem;
-    }
-    .summary-body { padding: 1.4rem; }
-    .summary-row {
-        display: flex;
-        justify-content: space-between;
-        font-size: 0.84rem;
-        color: var(--gray);
-        margin-bottom: 0.5rem;
-    }
-    .summary-row strong { color: var(--navy); }
-    .summary-total {
-        font-family: 'Playfair Display', serif;
-        font-size: 1.7rem;
-        font-weight: 800;
-        color: var(--red);
-    }
-    .summary-notes {
-        background: #f8fafc;
-        border-radius: 6px;
-        padding: 0.8rem 1rem;
-        margin-top: 1rem;
-    }
-    .note-row {
-        display: flex;
-        align-items: center;
-        gap: 0.45rem;
-        font-size: 0.77rem;
-        color: var(--gray);
-        margin-bottom: 0.3rem;
-    }
-    .note-row:last-child { margin-bottom: 0; }
-    .note-row .n-icon { color: var(--red); }
-
-    .empty-cart {
-        text-align: center;
-        padding: 5rem 0;
-    }
-    .empty-icon-wrap {
-        width: 90px; height: 90px;
-        border-radius: 50%;
-        background: #f1f5f9;
-        display: flex; align-items: center; justify-content: center;
-        margin: 0 auto 1.4rem;
-        font-size: 2.2rem;
-        color: var(--gray);
-    }
-
-    @media (max-width: 860px) {
-        .cart-layout { grid-template-columns: 1fr; }
-        .summary-card { position: static; }
-    }
-    @media (max-width: 560px) {
-        .cart-table thead { display: none; }
-        .cart-table tbody td { display: block; padding: 0.5rem 1rem; }
-        .cart-table tbody td:first-child { padding-top: 1rem; }
-        .cart-table tbody td:last-child { padding-bottom: 1rem; }
-    }
-</style>
-@endsection
+@section('title', 'Your Cart — TechShop')
 
 @section('content')
 
-<div class="page-header">
-    <div class="container">
-        <div class="section-label" style="color:var(--gold);">Ready to Book</div>
-        <h1 class="section-title" style="color:white;">Your Cart</h1>
+<div class="pg-head">
+  <div class="container">
+    <div class="pg-head-inner">
+      <a href="{{ route('products') }}" class="pg-back">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"/></svg>
+        Continue Shopping
+      </a>
+      <h1>Shopping Cart</h1>
+      <p class="pg-sub">Review your items before checkout</p>
     </div>
+  </div>
 </div>
 
 <div class="container">
-    @if(empty($cart))
-        <div class="empty-cart">
-            <div class="empty-icon-wrap">&#128704;</div>
-            <h3 style="font-family:'Playfair Display',serif;margin-bottom:0.5rem;">Your cart is empty</h3>
-            <p class="text-muted" style="margin-bottom:1.3rem;">Discover our amazing tour packages and start your Turkish adventure.</p>
-            <a href="{{ route('tours') }}" class="btn btn-primary">Browse Tours</a>
-        </div>
-    @else
-        <div class="cart-layout">
+  @if(empty($cart))
+    <div class="empty">
+      <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 002 1.61h9.72a2 2 0 002-1.61L23 6H6"/></svg>
+      <h3>Your cart is empty</h3>
+      <p>Browse our latest products and add something you love.</p>
+      <a href="{{ route('products') }}" class="btn btn-p">Browse Products</a>
+    </div>
+  @else
+    <div class="cart-layout">
 
-            <!-- Cart Items -->
-            <div>
-                <div class="cart-table-wrap">
-                    <div style="overflow-x:auto;">
-                        <table class="cart-table">
-                            <thead>
-                                <tr>
-                                    <th>Tour</th>
-                                    <th>Price</th>
-                                    <th>Travelers</th>
-                                    <th>Subtotal</th>
-                                    <th></th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @foreach($cart as $productId => $item)
-                                <tr>
-                                    <td>
-                                        <div style="display:flex;align-items:center;gap:0.85rem;">
-                                            @if($item['image'])
-                                                <img src="{{ $item['image'] }}" class="cart-item-img" alt="{{ $item['title'] }}">
-                                            @else
-                                                <div class="cart-img-ph"></div>
-                                            @endif
-                                            <span class="cart-title">{{ $item['title'] }}</span>
-                                        </div>
-                                    </td>
-                                    <td style="font-weight:600;color:var(--navy);">${{ number_format($item['price'], 2) }}</td>
-                                    <td>
-                                        <form method="POST" action="{{ route('cart.update', $productId) }}" class="qty-wrap">
-                                            @csrf
-                                            <input type="number" name="quantity" value="{{ $item['quantity'] }}" min="1" max="20" class="qty-input">
-                                            <button type="submit" class="btn-qty" title="Update">&#10003;</button>
-                                        </form>
-                                    </td>
-                                    <td style="font-weight:700;color:var(--red);font-family:'Playfair Display',serif;">
-                                        ${{ number_format($item['price'] * $item['quantity'], 2) }}
-                                    </td>
-                                    <td>
-                                        <form method="POST" action="{{ route('cart.remove', $productId) }}">
-                                            @csrf
-                                            <button type="submit" class="btn-remove" title="Remove">&#10005;</button>
-                                        </form>
-                                    </td>
-                                </tr>
-                                @endforeach
-                            </tbody>
-                        </table>
-                    </div>
+      {{-- Cart Items --}}
+      <div>
+        <div style="background:var(--sf);border:1px solid var(--bd);border-radius:var(--r4);overflow:hidden">
+          <div style="padding:18px 22px;border-bottom:1px solid var(--bd);display:flex;justify-content:space-between;align-items:center">
+            <h3>Items ({{ collect($cart)->sum('quantity') }})</h3>
+          </div>
+          @foreach($cart as $productId => $item)
+            <div class="cart-item">
+              @if($item['image'])
+                <img class="ci-img" src="{{ $item['image'] }}" alt="{{ $item['title'] }}">
+              @else
+                <div class="ci-img" style="display:flex;align-items:center;justify-content:center;color:var(--tx3)">
+                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="3" width="20" height="14" rx="2"/></svg>
                 </div>
-                <div style="margin-top:0.8rem;">
-                    <a href="{{ route('tours') }}" class="btn btn-light">&larr; Continue Browsing</a>
+              @endif
+              <div class="ci-info">
+                <div class="ci-name">{{ $item['title'] }}</div>
+                <div class="ci-price">${{ number_format($item['price'], 2) }} each</div>
+              </div>
+              <div class="ci-acts">
+                <form method="POST" action="{{ route('cart.update', $productId) }}" style="display:flex;align-items:center;gap:6px">
+                  @csrf
+                  <input type="number" name="quantity" value="{{ $item['quantity'] }}" min="1" max="20" class="qty">
+                  <button type="submit" class="btn-i" style="width:36px;height:36px" title="Update">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+                  </button>
+                </form>
+                <div style="font-weight:700;color:var(--p);font-size:1rem;min-width:70px;text-align:right">
+                  ${{ number_format($item['price'] * $item['quantity'], 2) }}
                 </div>
+                <form method="POST" action="{{ route('cart.remove', $productId) }}">
+                  @csrf
+                  <button type="submit" class="btn-i" style="width:36px;height:36px;border-color:var(--err-bg);color:var(--err)" title="Remove">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/><path d="M10 11v6M14 11v6"/></svg>
+                  </button>
+                </form>
+              </div>
             </div>
-
-            <!-- Summary -->
-            <div>
-                <div class="summary-card">
-                    <div class="summary-head">Order Summary</div>
-                    <div class="summary-body">
-                        @foreach($cart as $item)
-                            <div class="summary-row">
-                                <span>{{ Str::limit($item['title'], 22) }} &times;{{ $item['quantity'] }}</span>
-                                <strong>${{ number_format($item['price'] * $item['quantity'], 2) }}</strong>
-                            </div>
-                        @endforeach
-
-                        <hr style="border:none;border-top:1px solid #f1f5f9;margin:1rem 0;">
-
-                        <div style="display:flex;justify-content:space-between;align-items:flex-end;">
-                            <span style="font-weight:600;color:var(--navy);">Total</span>
-                            <div class="summary-total">${{ number_format($total, 2) }}</div>
-                        </div>
-
-                        <div style="margin-top:1.3rem;">
-                            @auth
-                                <a href="{{ route('checkout') }}" class="btn btn-primary btn-block">Proceed to Checkout</a>
-                            @else
-                                <a href="{{ route('login') }}" class="btn btn-primary btn-block">Login to Checkout</a>
-                                <p style="text-align:center;font-size:0.78rem;color:var(--gray);margin-top:0.75rem;">
-                                    Need an account? <a href="{{ route('register') }}" style="color:var(--red);font-weight:600;">Register free</a>
-                                </p>
-                            @endauth
-                        </div>
-
-                        <div class="summary-notes">
-                            <div class="note-row"><span class="n-icon">&#10003;</span> Secure &amp; encrypted checkout</div>
-                            <div class="note-row"><span class="n-icon">&#9742;</span> We'll contact you to confirm payment</div>
-                        </div>
-                    </div>
-                </div>
-            </div>
+          @endforeach
         </div>
-    @endif
+      </div>
+
+      {{-- Summary --}}
+      <div>
+        <div class="cart-sum">
+          <h3>Order Summary</h3>
+          @foreach($cart as $item)
+            <div class="sum-row">
+              <span style="color:var(--tx2)">{{ Str::limit($item['title'], 24) }} &times;{{ $item['quantity'] }}</span>
+              <span style="font-weight:600">${{ number_format($item['price'] * $item['quantity'], 2) }}</span>
+            </div>
+          @endforeach
+          <hr class="divider">
+          <div class="sum-row" style="border:none">
+            <span>Shipping</span>
+            <span style="color:var(--ok);font-weight:600">{{ $total >= 99 ? 'Free' : '$9.99' }}</span>
+          </div>
+          <div class="sum-tot">
+            <span>Total</span>
+            <span>${{ number_format($total >= 99 ? $total : $total + 9.99, 2) }}</span>
+          </div>
+
+          @if($total < 99)
+            <div style="background:var(--p-tint);border:1px solid var(--bd2);border-radius:var(--r2);padding:10px 12px;font-size:.84rem;margin-bottom:16px">
+              <strong style="color:var(--p)">Add ${{ number_format(99 - $total, 2) }} more</strong> to get free shipping!
+            </div>
+          @endif
+
+          @auth
+            <a href="{{ route('checkout') }}" class="btn btn-p btn-fw btn-lg">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+              Secure Checkout
+            </a>
+          @else
+            <a href="{{ route('login') }}" class="btn btn-p btn-fw btn-lg">Login to Checkout</a>
+            <p style="text-align:center;font-size:.84rem;color:var(--tx3);margin-top:10px">
+              No account? <a href="{{ route('register') }}" style="color:var(--p);font-weight:600">Register free</a>
+            </p>
+          @endauth
+
+          <div style="margin-top:16px;display:flex;flex-direction:column;gap:8px">
+            @foreach(['Encrypted & secure checkout','No payment online — we contact you','Easy returns within 30 days'] as $note)
+              <div style="display:flex;align-items:center;gap:8px;font-size:.8rem;color:var(--tx3)">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--ok)" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+                {{ $note }}
+              </div>
+            @endforeach
+          </div>
+        </div>
+      </div>
+
+    </div>
+  @endif
 </div>
+
 @endsection

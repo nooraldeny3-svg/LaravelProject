@@ -1,421 +1,228 @@
 @extends('layouts.app')
-@section('title', 'TurkeyTours — Discover the Magic of Turkey')
-
-@section('styles')
-<style>
-    .hero {
-        position: relative;
-        min-height: 90vh;
-        display: flex;
-        align-items: center;
-        background: var(--navy);
-        overflow: hidden;
-    }
-    .hero-bg {
-        position: absolute;
-        inset: 0;
-        background-image: url('https://images.unsplash.com/photo-1524231757912-21f4fe3a7200?w=1600&q=80');
-        background-size: cover;
-        background-position: center;
-        opacity: 0.28;
-    }
-    .hero-overlay {
-        position: absolute;
-        inset: 0;
-        background: linear-gradient(135deg, rgba(15,23,42,0.96) 0%, rgba(15,23,42,0.7) 60%, rgba(192,57,43,0.18) 100%);
-    }
-    .hero-content {
-        position: relative;
-        z-index: 1;
-        padding: 5rem 0;
-        max-width: 620px;
-    }
-    .hero-eyebrow {
-        display: inline-block;
-        background: rgba(217,119,6,0.14);
-        border: 1px solid rgba(217,119,6,0.35);
-        border-radius: 50px;
-        padding: 0.32rem 1rem;
-        color: #fbbf24;
-        font-size: 0.75rem;
-        font-weight: 600;
-        letter-spacing: 2px;
-        text-transform: uppercase;
-        margin-bottom: 1.4rem;
-    }
-    .hero-title {
-        font-family: 'Playfair Display', serif;
-        font-size: clamp(2.4rem, 5vw, 4.8rem);
-        font-weight: 700;
-        color: white;
-        line-height: 1.1;
-        margin-bottom: 1.4rem;
-    }
-    .hero-title em { color: #fbbf24; font-style: italic; }
-    .hero-subtitle {
-        font-size: 1rem;
-        color: rgba(255,255,255,0.7);
-        max-width: 490px;
-        line-height: 1.8;
-        margin-bottom: 2.2rem;
-    }
-    .hero-buttons {
-        display: flex;
-        gap: 0.9rem;
-        flex-wrap: wrap;
-    }
-    .hero-stats {
-        display: flex;
-        gap: 2rem;
-        margin-top: 2.8rem;
-        padding-top: 1.8rem;
-        border-top: 1px solid rgba(255,255,255,0.1);
-    }
-    .stat-num {
-        font-family: 'Playfair Display', serif;
-        font-size: 1.85rem;
-        font-weight: 700;
-        color: #fbbf24;
-        line-height: 1;
-    }
-    .stat-lbl {
-        font-size: 0.73rem;
-        color: rgba(255,255,255,0.48);
-        margin-top: 0.2rem;
-    }
-
-    .features-strip {
-        background: var(--navy-mid);
-        padding: 1.1rem 0;
-        border-bottom: 1px solid rgba(255,255,255,0.05);
-    }
-    .features-row {
-        display: flex;
-        justify-content: center;
-        flex-wrap: wrap;
-        gap: 2.2rem;
-    }
-    .feature-item {
-        font-size: 0.85rem;
-        font-weight: 500;
-        color: rgba(255,255,255,0.68);
-        display: flex;
-        align-items: center;
-        gap: 0.45rem;
-    }
-    .feature-item .tick { color: var(--gold); font-weight: 700; }
-
-    .section-row {
-        display: flex;
-        justify-content: space-between;
-        align-items: flex-end;
-        flex-wrap: wrap;
-        gap: 1rem;
-        margin-bottom: 2.5rem;
-    }
-
-    .tours-grid {
-        display: grid;
-        grid-template-columns: repeat(3, 1fr);
-        gap: 1.4rem;
-    }
-
-    .cities-section {
-        background: var(--navy);
-        padding: 5rem 0;
-    }
-    .cities-grid {
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        gap: 1.2rem;
-    }
-    .city-card {
-        position: relative;
-        border-radius: 8px;
-        overflow: hidden;
-        display: block;
-        transition: transform 0.2s, box-shadow 0.2s;
-    }
-    .city-card:hover { transform: translateY(-4px); box-shadow: 0 10px 28px rgba(0,0,0,0.3); }
-    .city-card img {
-        width: 100%; height: 100%;
-        object-fit: cover;
-        transition: transform 0.4s;
-        display: block;
-    }
-    .city-card:hover img { transform: scale(1.05); }
-    .city-overlay {
-        position: absolute;
-        inset: 0;
-        background: linear-gradient(to top, rgba(15,23,42,0.9) 0%, rgba(15,23,42,0.25) 65%, transparent 100%);
-    }
-    .city-info {
-        position: absolute;
-        bottom: 0; left: 0; right: 0;
-        padding: 1.1rem;
-    }
-    .city-name {
-        font-family: 'Playfair Display', serif;
-        font-size: 1.3rem;
-        font-weight: 700;
-        color: white;
-    }
-    .city-tours { font-size: 0.76rem; color: #fbbf24; margin-top: 0.15rem; }
-
-    .why-grid {
-        display: grid;
-        grid-template-columns: repeat(4, 1fr);
-        gap: 1.4rem;
-    }
-    .why-card {
-        background: white;
-        border-radius: 8px;
-        padding: 2rem 1.4rem;
-        text-align: center;
-        border: 1px solid var(--border);
-        transition: transform 0.2s, box-shadow 0.2s, border-color 0.2s;
-    }
-    .why-card:hover {
-        transform: translateY(-4px);
-        box-shadow: 0 8px 22px rgba(0,0,0,0.08);
-        border-color: rgba(192,57,43,0.18);
-    }
-    .why-icon {
-        width: 56px; height: 56px;
-        border-radius: 50%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        margin: 0 auto 1.1rem;
-        font-size: 1.4rem;
-        font-weight: 700;
-    }
-
-    .cta-section {
-        background: var(--navy);
-        border-radius: 10px;
-        padding: 3.2rem;
-    }
-    .cta-inner {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        flex-wrap: wrap;
-        gap: 1.8rem;
-    }
-
-    @media (max-width: 900px) {
-        .tours-grid { grid-template-columns: repeat(2, 1fr); }
-        .why-grid   { grid-template-columns: repeat(2, 1fr); }
-        .cities-grid { grid-template-columns: 1fr; }
-    }
-    @media (max-width: 580px) {
-        .tours-grid { grid-template-columns: 1fr; }
-        .why-grid   { grid-template-columns: 1fr 1fr; }
-        .cta-section { padding: 2rem 1.4rem; }
-    }
-</style>
-@endsection
+@section('title', 'TechShop — Premium Electronics Store')
 
 @section('content')
 
-<!-- Hero -->
+{{-- HERO --}}
 <section class="hero">
-    <div class="hero-bg"></div>
-    <div class="hero-overlay"></div>
-    <div class="container">
-        <div class="hero-content">
-            <div class="hero-eyebrow">Turkey's #1 Tour Agency</div>
-            <h1 class="hero-title">
-                Discover the<br>
-                <em>Magic</em> of<br>
-                Turkey
-            </h1>
-            <p class="hero-subtitle">
-                From the minarets of Istanbul to the fairy chimneys of Cappadocia — we craft unforgettable journeys across Turkey's most breathtaking destinations.
-            </p>
-            <div class="hero-buttons">
-                <a href="{{ route('tours') }}" class="btn btn-primary">Explore Tours</a>
-                <a href="{{ route('cities') }}" class="btn btn-outline">Browse Cities</a>
-            </div>
-            <div class="hero-stats">
-                <div>
-                    <div class="stat-num">8+</div>
-                    <div class="stat-lbl">Tour Packages</div>
-                </div>
-                <div>
-                    <div class="stat-num">4</div>
-                    <div class="stat-lbl">Turkish Cities</div>
-                </div>
-                <div>
-                    <div class="stat-num">10+</div>
-                    <div class="stat-lbl">Years Experience</div>
-                </div>
-            </div>
+  <div class="container">
+    <div class="hero-grid">
+
+      {{-- Left: text --}}
+      <div>
+        <div class="hero-eye">
+          <span class="hero-dot"></span>
+          New Arrivals 2024
         </div>
+        <h1 class="hero-title">
+          Discover the<br>
+          <span class="text-grad">Future of Tech</span>
+        </h1>
+        <p class="hero-desc">
+          Shop the latest smartphones, laptops, audio gear, gaming consoles, and smart devices — all in one place, with free fast delivery.
+        </p>
+        <div class="hero-ctas">
+          <a href="{{ route('products') }}" class="btn btn-p btn-lg">Shop Now</a>
+          <a href="{{ route('categories') }}" class="btn btn-o btn-lg">Browse Categories</a>
+        </div>
+        <div class="hero-stats">
+          <div>
+            <div class="stat-val">{{ \App\Models\Product::count() }}+</div>
+            <div class="stat-lbl">Products</div>
+          </div>
+          <div>
+            <div class="stat-val">{{ \App\Models\Category::count() }}</div>
+            <div class="stat-lbl">Categories</div>
+          </div>
+          <div>
+            <div class="stat-val">24h</div>
+            <div class="stat-lbl">Fast Delivery</div>
+          </div>
+          <div>
+            <div class="stat-val">2yr</div>
+            <div class="stat-lbl">Warranty</div>
+          </div>
+        </div>
+      </div>
+
+      {{-- Right: product mosaic --}}
+      <div class="hero-vis">
+        <div class="hero-vis-grid">
+          @foreach($featuredProducts->take(4) as $p)
+            <a href="{{ route('products.show', $p->id) }}" class="hero-vc">
+              @if($p->image)
+                <img src="{{ $p->image }}" alt="{{ $p->title }}" loading="lazy">
+              @else
+                <div style="width:100%;aspect-ratio:4/3;background:var(--sf2);display:flex;align-items:center;justify-content:center;color:var(--tx3);">
+                  <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+                </div>
+              @endif
+            </a>
+          @endforeach
+        </div>
+      </div>
+
     </div>
+  </div>
 </section>
 
-<!-- Features Strip -->
-<div class="features-strip">
-    <div class="container">
-        <div class="features-row">
-            <div class="feature-item"><span class="tick">&#10003;</span> Trusted Agency</div>
-            <div class="feature-item"><span class="tick">&#10003;</span> Expert Local Guides</div>
-            <div class="feature-item"><span class="tick">&#10003;</span> Best Price Guarantee</div>
-            <div class="feature-item"><span class="tick">&#10003;</span> 24/7 Support</div>
-            <div class="feature-item"><span class="tick">&#10003;</span> Flexible Booking</div>
-        </div>
+{{-- FEATURES STRIP --}}
+<div style="background:var(--sf);border-bottom:1px solid var(--bd);padding:16px 0;">
+  <div class="container">
+    <div style="display:flex;flex-wrap:wrap;justify-content:center;gap:24px 40px;">
+      @foreach([
+        ['icon'=>'M5 13l4 4L19 7','label'=>'Free Shipping over $99'],
+        ['icon'=>'M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z','label'=>'2-Year Warranty'],
+        ['icon'=>'M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z','label'=>'24/7 Support'],
+        ['icon'=>'M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15','label'=>'Easy Returns'],
+      ] as $f)
+      <div style="display:flex;align-items:center;gap:9px;font-size:.875rem;font-weight:600;color:var(--tx2);">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--p)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="{{ $f['icon'] }}"/></svg>
+        {{ $f['label'] }}
+      </div>
+      @endforeach
     </div>
+  </div>
 </div>
 
-<!-- Featured Tours -->
-<section style="padding:5rem 0;">
-    <div class="container">
-        <div class="section-row">
-            <div>
-                <div class="section-label">Handpicked Experiences</div>
-                <h2 class="section-title">Featured <span>Tours</span></h2>
-                <p style="color:var(--gray);margin-top:0.7rem;max-width:490px;line-height:1.7;font-size:0.95rem;">Our most popular packages, carefully curated for an unforgettable Turkish adventure.</p>
-            </div>
-            <a href="{{ route('tours') }}" class="btn btn-primary">View All Tours &rarr;</a>
-        </div>
-
-        @if($featuredTours->isEmpty())
-            <div class="text-center" style="padding:3rem 0;">
-                <p class="text-muted">No tours available yet.</p>
-            </div>
-        @else
-            <div class="tours-grid">
-                @foreach($featuredTours as $tour)
-                <div class="tour-card">
-                    <div class="card-img-wrap">
-                        @if($tour->image)
-                            <img src="{{ $tour->image }}" alt="{{ $tour->title }}" loading="lazy">
-                        @else
-                            <div class="img-placeholder">&#128247;</div>
-                        @endif
-                        <span class="card-city-badge">{{ $tour->category->name }}</span>
-                        <span class="card-price-tag">${{ number_format($tour->price, 0) }}</span>
-                    </div>
-                    <div class="card-body">
-                        <h5 class="card-title">{{ $tour->title }}</h5>
-                        <p class="card-text">{{ Str::limit($tour->description, 90) }}</p>
-                        <div class="card-foot">
-                            <span class="card-meta">&#128336; {{ $tour->duration_days }} day(s)</span>
-                            <a href="{{ route('tours.show', $tour->id) }}" class="btn btn-primary btn-sm">View Tour</a>
-                        </div>
-                    </div>
-                </div>
-                @endforeach
-            </div>
-        @endif
+{{-- CATEGORIES --}}
+<section class="section">
+  <div class="container">
+    <div class="sec-head flex-bet flex-wrap gap-3">
+      <div>
+        <h2>Shop by <span class="text-grad">Category</span></h2>
+        <p>Find exactly what you're looking for</p>
+      </div>
+      <a href="{{ route('categories') }}" class="btn btn-o">View All</a>
     </div>
+
+    <div class="g4" style="grid-template-columns:repeat(auto-fill,minmax(200px,1fr))">
+      @forelse($categories as $cat)
+        <a href="{{ route('products', ['category' => $cat->id]) }}" class="cat-card">
+          @if($cat->image)
+            <img src="{{ $cat->image }}" alt="{{ $cat->name }}" loading="lazy">
+          @else
+            <div style="width:100%;height:100%;background:linear-gradient(135deg,var(--p),#9B85FF)"></div>
+          @endif
+          <div class="cat-ov"></div>
+          <div class="cat-body">
+            <div class="cat-cnt">{{ $cat->products_count }} products</div>
+            <div class="cat-name">{{ $cat->name }}</div>
+          </div>
+          <div class="cat-arr">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+          </div>
+        </a>
+      @empty
+        <p class="text-muted">No categories yet.</p>
+      @endforelse
+    </div>
+  </div>
 </section>
 
-<!-- Cities Showcase -->
-<section class="cities-section">
-    <div class="container">
-        <div class="text-center" style="margin-bottom:2.8rem;">
-            <div class="section-label" style="color:var(--gold);">Our Destinations</div>
-            <h2 class="section-title" style="color:white;">Explore Turkish <em style="color:#fbbf24;">Cities</em></h2>
-            <p style="color:rgba(255,255,255,0.58);margin-top:0.7rem;font-size:0.92rem;">Each city tells a different story. Which chapter will you write?</p>
-        </div>
+{{-- FEATURED PRODUCTS --}}
+<section class="section" style="padding-top:0;background:var(--sf2)">
+  <div class="container" style="padding-top:56px">
+    <div class="sec-head flex-bet flex-wrap gap-3">
+      <div>
+        <h2>Featured <span class="text-grad">Products</span></h2>
+        <p>Hand-picked top sellers and new arrivals</p>
+      </div>
+      <a href="{{ route('products') }}" class="btn btn-o">View All Products</a>
+    </div>
 
-        <div class="cities-grid">
-            <a href="{{ route('tours', ['category' => 1]) }}" class="city-card" style="height:280px;">
-                <img src="https://images.unsplash.com/photo-1524231757912-21f4fe3a7200?w=800&q=80" alt="Istanbul" loading="lazy">
-                <div class="city-overlay"></div>
-                <div class="city-info">
-                    <div class="city-name">Istanbul</div>
-                    <div class="city-tours">2 tours available</div>
+    @if($featuredProducts->isEmpty())
+      <div class="empty">
+        <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/></svg>
+        <h3>No products yet</h3>
+        <p>Check back soon for new arrivals.</p>
+      </div>
+    @else
+      <div class="prod-grid">
+        @foreach($featuredProducts as $product)
+          <div class="card" style="display:flex;flex-direction:column">
+            <a href="{{ route('products.show', $product->id) }}">
+              @if($product->image)
+                <img class="card-img" src="{{ $product->image }}" alt="{{ $product->title }}" loading="lazy">
+              @else
+                <div class="card-ph">
+                  <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="3" width="20" height="14" rx="2"/></svg>
                 </div>
+              @endif
             </a>
-            <div style="display:grid;grid-template-columns:1fr 1fr;grid-template-rows:1fr 1fr;gap:1.2rem;height:280px;">
-                <a href="{{ route('tours', ['category' => 2]) }}" class="city-card" style="grid-column:1/3;">
-                    <img src="https://images.unsplash.com/photo-1570939274717-7eda259b50ed?w=800&q=80" alt="Cappadocia" loading="lazy">
-                    <div class="city-overlay"></div>
-                    <div class="city-info" style="padding:0.8rem;">
-                        <div class="city-name" style="font-size:1.1rem;">Cappadocia</div>
-                        <div class="city-tours">3 tours available</div>
-                    </div>
-                </a>
-                <a href="{{ route('tours', ['category' => 3]) }}" class="city-card">
-                    <img src="https://images.unsplash.com/photo-1571406252241-db0280bd36cd?w=800&q=80" alt="Antalya" loading="lazy">
-                    <div class="city-overlay"></div>
-                    <div class="city-info" style="padding:0.8rem;">
-                        <div class="city-name" style="font-size:0.98rem;">Antalya</div>
-                        <div class="city-tours">2 tours</div>
-                    </div>
-                </a>
-                <a href="{{ route('tours', ['category' => 4]) }}" class="city-card">
-                    <img src="https://images.unsplash.com/photo-1578922746465-3a80a228f223?w=800&q=80" alt="Pamukkale" loading="lazy">
-                    <div class="city-overlay"></div>
-                    <div class="city-info" style="padding:0.8rem;">
-                        <div class="city-name" style="font-size:0.98rem;">Pamukkale</div>
-                        <div class="city-tours">1 tour</div>
-                    </div>
-                </a>
+            <div class="card-body" style="flex:1;display:flex;flex-direction:column">
+              @if($product->category)
+                <div class="card-badge">{{ $product->category->name }}</div>
+              @endif
+              @if($product->brand)
+                <div class="card-brand">{{ $product->brand }}</div>
+              @endif
+              <a href="{{ route('products.show', $product->id) }}" class="card-title">{{ $product->title }}</a>
+              <div class="card-price">${{ number_format($product->price, 0) }}</div>
+              <div class="card-stock {{ $product->stock < 10 ? 'low' : '' }}">
+                {{ $product->stock > 0 ? $product->stock . ' in stock' : 'Out of stock' }}
+              </div>
+              <div style="margin-top:auto">
+                <form method="POST" action="{{ route('cart.add', $product->id) }}">
+                  @csrf
+                  <button type="submit" class="btn btn-p btn-fw">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 002 1.61h9.72a2 2 0 002-1.61L23 6H6"/></svg>
+                    Add to Cart
+                  </button>
+                </form>
+              </div>
             </div>
-        </div>
-    </div>
+          </div>
+        @endforeach
+      </div>
+    @endif
+  </div>
 </section>
 
-<!-- Why Choose Us -->
-<section style="padding:5rem 0;">
-    <div class="container">
-        <div class="text-center" style="margin-bottom:2.8rem;">
-            <div class="section-label">Why Travel With Us</div>
-            <h2 class="section-title">Your Journey, <span>Our Passion</span></h2>
-        </div>
-        <div class="why-grid">
-            <div class="why-card">
-                <div class="why-icon" style="background:rgba(192,57,43,0.08);color:var(--red);">10+</div>
-                <h6 style="font-family:'Playfair Display',serif;font-weight:700;font-size:0.97rem;margin-bottom:0.45rem;">Trusted Agency</h6>
-                <p style="font-size:0.82rem;color:var(--gray);line-height:1.7;">Over 10 years crafting unforgettable Turkish experiences.</p>
-            </div>
-            <div class="why-card">
-                <div class="why-icon" style="background:rgba(217,119,6,0.08);color:var(--gold);">&#9733;</div>
-                <h6 style="font-family:'Playfair Display',serif;font-weight:700;font-size:0.97rem;margin-bottom:0.45rem;">Expert Guides</h6>
-                <p style="font-size:0.82rem;color:var(--gray);line-height:1.7;">Certified, English-speaking local guides on every tour.</p>
-            </div>
-            <div class="why-card">
-                <div class="why-icon" style="background:rgba(16,185,129,0.08);color:#10b981;">$</div>
-                <h6 style="font-family:'Playfair Display',serif;font-weight:700;font-size:0.97rem;margin-bottom:0.45rem;">Best Prices</h6>
-                <p style="font-size:0.82rem;color:var(--gray);line-height:1.7;">We match any lower price you find for the same tour.</p>
-            </div>
-            <div class="why-card">
-                <div class="why-icon" style="background:rgba(99,102,241,0.08);color:#6366f1;">24h</div>
-                <h6 style="font-family:'Playfair Display',serif;font-weight:700;font-size:0.97rem;margin-bottom:0.45rem;">24/7 Support</h6>
-                <p style="font-size:0.82rem;color:var(--gray);line-height:1.7;">Round-the-clock assistance before, during and after your trip.</p>
-            </div>
-        </div>
+{{-- WHY TECHSHOP --}}
+<section class="section">
+  <div class="container">
+    <div class="sec-head center">
+      <h2>Why Choose <span class="text-grad">TechShop</span></h2>
+      <p>We're committed to delivering the best tech shopping experience</p>
     </div>
+    <div class="g4">
+      @foreach([
+        ['color'=>'ico-blue','icon'=>'M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z','title'=>'Genuine Products','desc'=>'Every product is 100% authentic with official manufacturer warranty.'],
+        ['color'=>'ico-cyan','icon'=>'M13 10V3L4 14h7v7l9-11h-7z','title'=>'Fast Delivery','desc'=>'Same-day dispatch on orders placed before 2 PM. Nationwide coverage.'],
+        ['color'=>'ico-green','icon'=>'M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z','title'=>'Secure Payments','desc'=>'Bank-level encryption protects every transaction you make with us.'],
+        ['color'=>'ico-amber','icon'=>'M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15','title'=>'Easy Returns','desc'=>'Not happy? Return within 30 days for a full refund, no questions asked.'],
+      ] as $f)
+        <div class="feat-card">
+          <div class="feat-icon {{ $f['color'] }}">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="{{ $f['icon'] }}"/></svg>
+          </div>
+          <h4>{{ $f['title'] }}</h4>
+          <p>{{ $f['desc'] }}</p>
+        </div>
+      @endforeach
+    </div>
+  </div>
 </section>
 
-<!-- CTA Banner -->
-<section style="padding:0 0 5rem;">
-    <div class="container">
-        <div class="cta-section">
-            <div class="cta-inner">
-                <div>
-                    <div class="section-label" style="color:var(--gold);">Ready to Explore?</div>
-                    <h2 style="font-family:'Playfair Display',serif;font-size:2.1rem;font-weight:700;color:white;line-height:1.2;margin-top:0.2rem;">
-                        Start Your Turkish<br><em style="color:#fbbf24;">Adventure Today</em>
-                    </h2>
-                    <p style="color:rgba(255,255,255,0.58);font-size:0.92rem;margin-top:0.7rem;max-width:440px;line-height:1.7;">
-                        Browse our curated tour packages and book your dream trip to Turkey in minutes.
-                    </p>
-                </div>
-                <div style="display:flex;gap:0.9rem;flex-wrap:wrap;">
-                    <a href="{{ route('tours') }}" style="display:inline-block;background:var(--gold);color:var(--navy);padding:0.65rem 1.7rem;border-radius:6px;font-weight:700;font-size:0.88rem;">Browse Tours</a>
-                    @guest
-                    <a href="{{ route('register') }}" class="btn btn-outline">Create Account</a>
-                    @endguest
-                </div>
-            </div>
-        </div>
+{{-- CTA BANNER --}}
+<section style="padding:0 0 80px">
+  <div class="container">
+    <div style="background:linear-gradient(135deg,var(--p) 0%,#9B85FF 50%,var(--cyan) 100%);border-radius:24px;padding:56px 48px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:24px;position:relative;overflow:hidden;">
+      <div style="position:absolute;inset:0;background:radial-gradient(circle at 80% 50%,rgba(255,255,255,.12) 0%,transparent 60%);pointer-events:none;"></div>
+      <div style="position:relative;z-index:1;max-width:480px">
+        <div style="font-size:.78rem;font-weight:700;color:rgba(255,255,255,.7);text-transform:uppercase;letter-spacing:.08em;margin-bottom:10px">Limited Time Offer</div>
+        <h2 style="color:#fff;margin-bottom:10px;">Up to <span style="text-decoration:underline;text-decoration-color:rgba(255,255,255,.4);">40% Off</span> on<br>Select Electronics</h2>
+        <p style="color:rgba(255,255,255,.8);font-size:1rem;margin-bottom:0">Don't miss our best deals. New offers added weekly.</p>
+      </div>
+      <div style="display:flex;gap:12px;flex-wrap:wrap;position:relative;z-index:1">
+        <a href="{{ route('products') }}" class="btn" style="background:#fff;color:var(--p);font-weight:700;padding:13px 28px;border-radius:999px;">Shop the Sale</a>
+        @guest
+          <a href="{{ route('register') }}" class="btn btn-ghost-white btn-lg">Create Account</a>
+        @endguest
+      </div>
     </div>
+  </div>
 </section>
 
 @endsection

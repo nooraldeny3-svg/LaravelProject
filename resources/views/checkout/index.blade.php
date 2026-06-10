@@ -1,172 +1,121 @@
 @extends('layouts.app')
-@section('title', 'Checkout — TurkeyTours')
-
-@section('styles')
-<style>
-    .checkout-layout {
-        display: grid;
-        grid-template-columns: 1fr 360px;
-        gap: 1.8rem;
-        padding: 3rem 0;
-    }
-    .summary-card {
-        background: white;
-        border-radius: 8px;
-        border: 1px solid var(--border);
-        box-shadow: 0 2px 8px rgba(0,0,0,0.05);
-        overflow: hidden;
-        position: sticky;
-        top: 80px;
-    }
-    .summary-head {
-        background: var(--navy);
-        padding: 1.1rem 1.4rem;
-        color: white;
-        font-family: 'Playfair Display', serif;
-        font-weight: 600;
-        font-size: 0.97rem;
-    }
-    .summary-body { padding: 1.4rem; }
-    .summary-item {
-        display: flex;
-        justify-content: space-between;
-        align-items: flex-start;
-        gap: 1rem;
-        padding: 0.7rem 0;
-        border-bottom: 1px solid #f1f5f9;
-    }
-    .summary-item:last-child { border-bottom: none; }
-    .errors-box {
-        background: #fee2e2;
-        border-left: 4px solid var(--red);
-        border-radius: 6px;
-        padding: 0.9rem 1.1rem;
-        margin-bottom: 1.4rem;
-    }
-    .errors-box ul { padding-left: 1.2rem; font-size: 0.83rem; color: #b91c1c; }
-    .payment-note {
-        background: #f8fafc;
-        border: 1px dashed var(--border);
-        border-radius: 6px;
-        padding: 0.9rem 1rem;
-        margin-top: 1.1rem;
-    }
-    @media (max-width: 860px) {
-        .checkout-layout { grid-template-columns: 1fr; }
-        .summary-card { position: static; }
-    }
-</style>
-@endsection
+@section('title', 'Checkout — TechShop')
 
 @section('content')
 
-<div class="page-header">
-    <div class="container">
-        <div class="section-label" style="color:var(--gold);">Almost There</div>
-        <h1 class="section-title" style="color:white;">Checkout</h1>
+<div class="pg-head">
+  <div class="container">
+    <div class="pg-head-inner">
+      <a href="{{ route('cart.index') }}" class="pg-back">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"/></svg>
+        Back to Cart
+      </a>
+      <h1>Checkout</h1>
+      <p class="pg-sub">You're almost done — fill in your delivery details</p>
     </div>
+  </div>
 </div>
 
 <div class="container">
-    <div class="checkout-layout">
+  <div class="co-layout">
 
-        <!-- Form -->
-        <div>
-            <div class="form-card">
-                <div class="form-card-header">Your Booking Details</div>
-                <div class="form-card-body">
+    {{-- Form --}}
+    <div>
+      <div class="co-card">
 
-                    @if($errors->any())
-                        <div class="errors-box">
-                            <p style="font-weight:600;font-size:0.87rem;color:#991b1b;margin-bottom:0.4rem;">Please fix the following:</p>
-                            <ul>@foreach($errors->all() as $error)<li>{{ $error }}</li>@endforeach</ul>
-                        </div>
-                    @endif
+        @if($errors->any())
+          <div style="background:var(--err-bg);border:1px solid rgba(239,68,68,.25);border-radius:var(--r3);padding:14px 18px;margin-bottom:22px">
+            <p style="font-weight:600;font-size:.9rem;color:var(--err);margin-bottom:6px">Please fix the following errors:</p>
+            <ul style="padding-left:18px;font-size:.85rem;color:var(--err)">
+              @foreach($errors->all() as $error)<li>{{ $error }}</li>@endforeach
+            </ul>
+          </div>
+        @endif
 
-                    <form method="POST" action="{{ route('checkout.store') }}">
-                        @csrf
+        <form method="POST" action="{{ route('checkout.store') }}">
+          @csrf
 
-                        <div class="form-group">
-                            <label class="form-label">Full Name <span style="color:var(--red);">*</span></label>
-                            <input type="text" name="customer_name"
-                                   class="form-input @error('customer_name') is-invalid @enderror"
-                                   value="{{ old('customer_name', auth()->user()->name) }}"
-                                   placeholder="Enter your full name" required>
-                            @error('customer_name')
-                                <div class="form-error">{{ $message }}</div>
-                            @enderror
-                        </div>
-
-                        <div class="form-group">
-                            <label class="form-label">Phone Number <span style="color:var(--red);">*</span></label>
-                            <input type="text" name="customer_phone"
-                                   class="form-input @error('customer_phone') is-invalid @enderror"
-                                   value="{{ old('customer_phone') }}"
-                                   placeholder="+90 555 000 00 00" required>
-                            @error('customer_phone')
-                                <div class="form-error">{{ $message }}</div>
-                            @enderror
-                        </div>
-
-                        <div class="form-group" style="margin-bottom:2rem;">
-                            <label class="form-label">Travel Date <span style="color:var(--red);">*</span></label>
-                            <input type="date" name="travel_date"
-                                   class="form-input @error('travel_date') is-invalid @enderror"
-                                   value="{{ old('travel_date') }}"
-                                   min="{{ date('Y-m-d', strtotime('+1 day')) }}" required>
-                            <div class="form-hint">Select a date at least 1 day from today.</div>
-                            @error('travel_date')
-                                <div class="form-error">{{ $message }}</div>
-                            @enderror
-                        </div>
-
-                        <button type="submit" class="btn btn-primary btn-block" style="font-size:0.95rem;padding:0.88rem;">
-                            Confirm My Booking
-                        </button>
-                    </form>
-                </div>
+          {{-- Contact Info --}}
+          <div class="co-sec">
+            <div class="co-num">1</div>
+            Contact Information
+          </div>
+          <div class="fr mb-3">
+            <div class="fg">
+              <label class="fl" for="customer_name">Full Name <span>*</span></label>
+              <input type="text" id="customer_name" name="customer_name" class="fi @error('customer_name') is-err @enderror"
+                value="{{ old('customer_name', auth()->user()->name) }}" placeholder="John Smith" required autocomplete="name">
+              @error('customer_name')<div class="fe">{{ $message }}</div>@enderror
             </div>
-        </div>
-
-        <!-- Order Summary -->
-        <div>
-            <div class="summary-card">
-                <div class="summary-head">Order Summary</div>
-                <div class="summary-body">
-                    @foreach($cart as $item)
-                        <div class="summary-item">
-                            <div style="flex:1;">
-                                <div style="font-weight:600;font-size:0.88rem;color:var(--navy);">{{ $item['title'] }}</div>
-                                <div style="font-size:0.76rem;color:var(--gray);margin-top:0.15rem;">
-                                    {{ $item['quantity'] }} traveler(s) &times; ${{ number_format($item['price'], 2) }}
-                                </div>
-                            </div>
-                            <div style="font-weight:700;color:var(--red);font-family:'Playfair Display',serif;white-space:nowrap;font-size:0.95rem;">
-                                ${{ number_format($item['price'] * $item['quantity'], 2) }}
-                            </div>
-                        </div>
-                    @endforeach
-
-                    <div style="display:flex;justify-content:space-between;align-items:flex-end;margin-top:0.8rem;padding-top:0.8rem;border-top:2px solid var(--navy);">
-                        <span style="font-weight:600;">Total</span>
-                        <div style="font-family:'Playfair Display',serif;font-size:1.85rem;font-weight:800;color:var(--red);">
-                            ${{ number_format($total, 2) }}
-                        </div>
-                    </div>
-
-                    <div class="payment-note">
-                        <p style="font-size:0.78rem;color:var(--gray);line-height:1.7;margin:0;">
-                            &#9742; No payment collected online. Our team will contact you within 24 hours to arrange payment.
-                        </p>
-                    </div>
-                </div>
+            <div class="fg">
+              <label class="fl" for="customer_phone">Phone Number <span>*</span></label>
+              <input type="tel" id="customer_phone" name="customer_phone" class="fi @error('customer_phone') is-err @enderror"
+                value="{{ old('customer_phone') }}" placeholder="+1 555 000 0000" required autocomplete="tel">
+              @error('customer_phone')<div class="fe">{{ $message }}</div>@enderror
             </div>
+          </div>
 
-            <a href="{{ route('cart.index') }}" class="btn btn-light btn-block" style="margin-top:0.75rem;">
-                &larr; Back to Cart
-            </a>
-        </div>
+          {{-- Delivery --}}
+          <div class="co-sec">
+            <div class="co-num">2</div>
+            Delivery Details
+          </div>
+          <div class="fg">
+            <label class="fl" for="shipping_address">Shipping Address <span>*</span></label>
+            <textarea id="shipping_address" name="shipping_address" class="ft @error('shipping_address') is-err @enderror"
+              placeholder="Street address, city, state, zip code" required autocomplete="street-address" rows="3">{{ old('shipping_address') }}</textarea>
+            @error('shipping_address')<div class="fe">{{ $message }}</div>@enderror
+          </div>
+          <div class="fg" style="margin-bottom:28px">
+            <label class="fl" for="delivery_date">Preferred Delivery Date <span>*</span></label>
+            <input type="date" id="delivery_date" name="delivery_date" class="fi @error('delivery_date') is-err @enderror"
+              value="{{ old('delivery_date') }}" min="{{ date('Y-m-d', strtotime('+1 day')) }}" required>
+            <div class="fh">Select a date at least 1 day from today.</div>
+            @error('delivery_date')<div class="fe">{{ $message }}</div>@enderror
+          </div>
 
+          {{-- Payment notice --}}
+          <div class="pay-note">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+            <div>
+              <p><strong style="color:var(--tx)">No online payment required.</strong> Our team will contact you within 24 hours to arrange a convenient payment method.</p>
+            </div>
+          </div>
+
+          <button type="submit" class="btn btn-p btn-fw btn-lg" style="margin-top:24px">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
+            Place My Order
+          </button>
+        </form>
+      </div>
     </div>
+
+    {{-- Order Summary --}}
+    <div>
+      <div class="cart-sum" style="position:sticky;top:calc(var(--nav-h) + 18px)">
+        <h3 style="margin-bottom:18px">Order Summary</h3>
+        @foreach($cart as $item)
+          <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:10px;padding:10px 0;border-bottom:1px solid var(--bd)">
+            <div style="flex:1;min-width:0">
+              <div style="font-weight:600;font-size:.9rem;color:var(--tx)">{{ $item['title'] }}</div>
+              <div style="font-size:.8rem;color:var(--tx3);margin-top:2px">{{ $item['quantity'] }} &times; ${{ number_format($item['price'], 2) }}</div>
+            </div>
+            <div style="font-weight:700;font-size:.95rem;color:var(--p);white-space:nowrap">${{ number_format($item['price'] * $item['quantity'], 2) }}</div>
+          </div>
+        @endforeach
+        <hr class="divider">
+        <div class="sum-row" style="border:none">
+          <span>Shipping</span>
+          <span style="color:var(--ok);font-weight:600">{{ $total >= 99 ? 'Free' : '$9.99' }}</span>
+        </div>
+        <div class="sum-tot">
+          <span>Total</span>
+          <span>${{ number_format($total >= 99 ? $total : $total + 9.99, 2) }}</span>
+        </div>
+      </div>
+    </div>
+
+  </div>
 </div>
+
 @endsection

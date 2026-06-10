@@ -3,70 +3,84 @@
 
 @section('content')
 
-<div class="page-header">
-    <div class="container">
-        <div class="section-label" style="color:var(--gold);">Admin Panel</div>
-        <h1 class="section-title" style="color:white;">All Orders</h1>
-        <p style="color:rgba(255,255,255,0.58);margin-top:0.4rem;font-size:0.88rem;">{{ $orders->count() }} total booking(s)</p>
-    </div>
-</div>
+<div class="adm-layout">
+  <aside class="adm-side">
+    <div class="adm-nav-lbl">Overview</div>
+    <a href="{{ route('admin.home') }}" class="adm-nav-item">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+      Dashboard
+    </a>
+    <div class="adm-nav-lbl">Catalog</div>
+    <a href="{{ route('admin.products.index') }}" class="adm-nav-item">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"/></svg>
+      Products
+    </a>
+    <a href="{{ route('admin.categories.index') }}" class="adm-nav-item">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 19a2 2 0 01-2 2H4a2 2 0 01-2-2V5a2 2 0 012-2h5l2 3h9a2 2 0 012 2z"/></svg>
+      Categories
+    </a>
+    <div class="adm-nav-lbl">Sales</div>
+    <a href="{{ route('admin.orders.index') }}" class="adm-nav-item on">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+      Orders
+    </a>
+    <hr class="divider">
+    <a href="{{ route('home') }}" class="adm-nav-item">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/></svg>
+      Back to Store
+    </a>
+  </aside>
 
-<div class="container" style="padding-top:2.5rem;padding-bottom:3rem;">
-
-    <div style="margin-bottom:1rem;">
-        <a href="{{ route('admin.home') }}" style="font-size:0.83rem;color:var(--gray);font-weight:500;">&larr; Dashboard</a>
+  <div class="adm-content">
+    <div class="flex-bet flex-wrap gap-3" style="margin-bottom:28px">
+      <div>
+        <h1 style="font-size:1.75rem">All Orders</h1>
+        <p style="margin-top:4px">{{ $orders->count() }} total order(s)</p>
+      </div>
     </div>
 
     @if($orders->isEmpty())
-        <div class="admin-card" style="padding:3rem;text-align:center;color:var(--gray);font-size:0.9rem;">
-            No orders have been placed yet.
-        </div>
+      <div class="empty"><h3>No orders yet</h3><p>Customer orders will appear here.</p></div>
     @else
-        <div class="admin-card">
-            <div class="table-wrap">
-                <table class="admin-table">
-                    <thead>
-                        <tr>
-                            <th>#</th>
-                            <th>Customer</th>
-                            <th>Phone</th>
-                            <th>Travel Date</th>
-                            <th>Total</th>
-                            <th>Status</th>
-                            <th>Date</th>
-                            <th></th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach($orders as $order)
-                        <tr>
-                            <td style="font-family:monospace;color:var(--gray);font-size:0.8rem;">#{{ str_pad($order->id, 4, '0', STR_PAD_LEFT) }}</td>
-                            <td>
-                                <div style="font-weight:600;color:var(--navy);">{{ $order->customer_name }}</div>
-                                <div style="font-size:0.74rem;color:var(--gray);">{{ $order->user->email }}</div>
-                            </td>
-                            <td style="color:var(--gray);font-size:0.84rem;">{{ $order->customer_phone }}</td>
-                            <td style="font-size:0.84rem;">{{ \Carbon\Carbon::parse($order->travel_date)->format('d M Y') }}</td>
-                            <td style="font-weight:700;color:var(--red);font-family:'Playfair Display',serif;">${{ number_format($order->total_price, 2) }}</td>
-                            <td>
-                                @if($order->status === 'confirmed')
-                                    <span class="badge badge-confirmed">&#10003; Confirmed</span>
-                                @elseif($order->status === 'cancelled')
-                                    <span class="badge badge-cancelled">&#10005; Cancelled</span>
-                                @else
-                                    <span class="badge badge-pending">&#8987; Pending</span>
-                                @endif
-                            </td>
-                            <td style="color:var(--gray);font-size:0.8rem;">{{ $order->created_at->format('d M Y') }}</td>
-                            <td>
-                                <a href="{{ route('admin.orders.show', $order->id) }}" class="btn-edit-sm">View</a>
-                            </td>
-                        </tr>
-                        @endforeach
-                    </tbody>
-                </table>
-            </div>
-        </div>
+      <div class="tw">
+        <table class="table">
+          <thead>
+            <tr>
+              <th>Order</th>
+              <th>Customer</th>
+              <th>Email</th>
+              <th>Total</th>
+              <th>Delivery Date</th>
+              <th>Status</th>
+              <th>Date</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody>
+            @foreach($orders as $order)
+              <tr>
+                <td><strong>#{{ str_pad($order->id, 6, '0', STR_PAD_LEFT) }}</strong></td>
+                <td>{{ $order->customer_name }}</td>
+                <td style="color:var(--tx3)">{{ $order->user->email ?? '—' }}</td>
+                <td style="font-weight:700;color:var(--p)">${{ number_format($order->total_price, 2) }}</td>
+                <td style="color:var(--tx2)">
+                  @if($order->delivery_date) {{ \Carbon\Carbon::parse($order->delivery_date)->format('d M Y') }} @else — @endif
+                </td>
+                <td>
+                  @if($order->status === 'confirmed') <span class="badge badge-conf">Confirmed</span>
+                  @elseif($order->status === 'cancelled') <span class="badge badge-canc">Cancelled</span>
+                  @else <span class="badge badge-pend">Pending</span>
+                  @endif
+                </td>
+                <td style="color:var(--tx3)">{{ $order->created_at->format('d M Y') }}</td>
+                <td><a href="{{ route('admin.orders.show', $order->id) }}" class="btn btn-o btn-sm">View</a></td>
+              </tr>
+            @endforeach
+          </tbody>
+        </table>
+      </div>
     @endif
+  </div>
 </div>
+
 @endsection

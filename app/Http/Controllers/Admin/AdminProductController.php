@@ -7,7 +7,6 @@ use App\Models\Category;
 use App\Models\Product;
 use Illuminate\Http\Request;
 
-// Full CRUD for tour packages in the admin panel.
 class AdminProductController extends Controller
 {
     public function index()
@@ -25,27 +24,29 @@ class AdminProductController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'category_id'   => 'required|exists:categories,id',
-            'title'         => 'required|string|max:255',
-            'description'   => 'required|string',
-            'price'         => 'required|numeric|min:0',
-            'duration_days' => 'required|integer|min:1',
-            'image'         => 'nullable|url|max:500',
-            'is_available'  => 'boolean',
+            'category_id'  => 'required|exists:categories,id',
+            'brand'        => 'nullable|string|max:100',
+            'title'        => 'required|string|max:255',
+            'description'  => 'required|string',
+            'price'        => 'required|numeric|min:0',
+            'stock'        => 'required|integer|min:0',
+            'image'        => 'nullable|url|max:500',
+            'is_available' => 'boolean',
         ]);
 
         Product::create([
-            'category_id'   => $request->category_id,
-            'title'         => $request->title,
-            'description'   => $request->description,
-            'price'         => $request->price,
-            'duration_days' => $request->duration_days,
-            'image'         => $request->image,
-            'is_available'  => $request->boolean('is_available'),
+            'category_id'  => $request->category_id,
+            'brand'        => $request->brand,
+            'title'        => $request->title,
+            'description'  => $request->description,
+            'price'        => $request->price,
+            'stock'        => $request->stock,
+            'image'        => $request->image,
+            'is_available' => $request->boolean('is_available'),
         ]);
 
         return redirect()->route('admin.products.index')
-                         ->with('success', 'Tour created successfully!');
+                         ->with('success', 'Product created successfully!');
     }
 
     public function edit(Product $product)
@@ -57,33 +58,35 @@ class AdminProductController extends Controller
     public function update(Request $request, Product $product)
     {
         $request->validate([
-            'category_id'   => 'required|exists:categories,id',
-            'title'         => 'required|string|max:255',
-            'description'   => 'required|string',
-            'price'         => 'required|numeric|min:0',
-            'duration_days' => 'required|integer|min:1',
-            'image'         => 'nullable|url|max:500',
-            'is_available'  => 'boolean',
+            'category_id'  => 'required|exists:categories,id',
+            'brand'        => 'nullable|string|max:100',
+            'title'        => 'required|string|max:255',
+            'description'  => 'required|string',
+            'price'        => 'required|numeric|min:0',
+            'stock'        => 'required|integer|min:0',
+            'image'        => 'nullable|url|max:500',
+            'is_available' => 'boolean',
         ]);
 
         $product->update([
-            'category_id'   => $request->category_id,
-            'title'         => $request->title,
-            'description'   => $request->description,
-            'price'         => $request->price,
-            'duration_days' => $request->duration_days,
-            'image'         => $request->image,
-            'is_available'  => $request->boolean('is_available'),
+            'category_id'  => $request->category_id,
+            'brand'        => $request->brand,
+            'title'        => $request->title,
+            'description'  => $request->description,
+            'price'        => $request->price,
+            'stock'        => $request->stock,
+            'image'        => $request->image,
+            'is_available' => $request->boolean('is_available'),
         ]);
 
         return redirect()->route('admin.products.index')
-                         ->with('success', 'Tour updated successfully!');
+                         ->with('success', 'Product updated successfully!');
     }
 
     public function destroy(Product $product)
     {
         $product->delete();
         return redirect()->route('admin.products.index')
-                         ->with('success', 'Tour deleted successfully!');
+                         ->with('success', 'Product deleted.');
     }
 }
